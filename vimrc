@@ -34,8 +34,6 @@ Plugin 'ntpeters/vim-better-whitespace'
 
 Plugin 'tpope/vim-obsession'
 
-"Plugin 'vim-ctrlspace/vim-ctrlspace'
-
 Plugin 'chrisbra/Recover.vim'
 
 Plugin 'rking/ag.vim'
@@ -55,6 +53,14 @@ Plugin 'vcscommand.vim'
 Plugin 'tpope/vim-surround'
 
 Plugin 'bkad/CamelCaseMotion'
+
+Plugin 'rust-lang/rust.vim'
+
+Plugin 'tpope/vim-fugitive'
+
+Plugin 'vim-scripts/Conque-GDB'
+
+"Plugin 'alessandroyorba/despacio' alternate color scheme
 
 "Plugin 'arnar/vim-matchopen'
 "Plugin 'vim-scripts/Highlight-UnMatched-Brackets'
@@ -102,10 +108,12 @@ nnoremap <C-n> <C-I>
 if !exists('set_syntax')
     syntax enable
     set background=dark
+    let g:solarized_termtrans = 1
     colorscheme solarized
 
-    set t_Co=256
-    let g:solarized_termcolors=256
+    "set t_Co=256
+    "let g:solarized_termcolors=256
+    let g:solarized_termcolors=16
     let g:solarized_contrast="high"
     let g:solarized_visibility="high"
 
@@ -138,10 +146,13 @@ nnoremap <S-Tab> <C-W>W
 " use <C-6> for previous buffer
 
 " Enable folding
-" set foldmethod=indent
-" set foldlevel=99
+set foldmethod=indent
+set foldlevel=99
 
 " nnoremap <space> za
+
+" Latex
+au BufNewFile,BufRead *.tex set tw=79
 
 " Python indentation
 au BufNewFile,BufRead *.py call SetPythonOptions()
@@ -193,6 +204,7 @@ let g:SuperTabDefaultCompletionType = "context"
 
 "NERDTree
 nnoremap <leader>n :NERDTreeToggle<CR>
+nnoremap <leader>nf :NERDTreeFind<CR>
 
 "guten-tags
 let g:gutentags_project_root=['.svn']
@@ -238,7 +250,7 @@ nnoremap <leader>r :redraw!<CR>
 nnoremap <leader>t :TlistToggle<CR>
 
 " TaskList (TODO)
-nnoremap <leader>d :TaskList<CR>
+nnoremap <leader>d <Plug>TaskList
 let g:tlTokenList = ['TODO:']
 
 "function! s:DiffWithSaved()
@@ -352,6 +364,36 @@ call camelcasemotion#CreateMotionMappings('\')
 " default to filename mode
 let g:ctrlp_by_filename = 1
 let g:ctrlp_switch_buffer = 'et'
+
+let g:ConqueGdb_Leader = '<leader>g'
+function! ArmGDB()
+    "ConqueTermTab bash
+    ConqueGdbExe /Users/Richard/bin/arm/gcc-arm-none-eabi-5_2-2015q4/bin/arm-none-eabi-gdb
+python << endpython
+import vim
+import os
+
+cwd = os.path.basename(os.path.normpath(os.getcwd()))
+
+bin_file = os.path.join('Bin',cwd,cwd+'.elf')
+
+#command = 'ConqueGdbExe /Users/Richard/bin/arm/gcc-arm-none-eabi-5_2-2015q4/bin/arm-none-eabi-gdb'
+#vim.command(command)
+
+command = 'ConqueGdbTab --eval-command="target remote localhost:3333" --eval-command="monitor reset halt" --eval-command="monitor arm semihosting enable"' + ' ' + bin_file
+
+vim.command(command)
+
+vim.command("return 0")
+endpython
+
+endfunction
+
+nnoremap <leader>tm :ConqueTermTab bash<CR>
+command! Term ConqueTermTab bash
+
+" BufExplorer
+let g:bufExplorerFindActive=0
 
 " Notes
 " gf - jump to file under cursor and <C-^> or <C-6> to return to previous
