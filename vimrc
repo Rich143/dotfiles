@@ -60,6 +60,14 @@ Plugin 'tpope/vim-fugitive'
 
 Plugin 'vim-scripts/Conque-GDB'
 
+"
+Plugin 'ajh17/VimCompletesMe'
+
+Plugin 'octref/RootIgnore'
+
+""https://github.com/vim-scripts/DoxygenToolkit.vim
+Plugin 'mrtazz/DoxygenToolkit.vim'
+
 "Plugin 'alessandroyorba/despacio' alternate color scheme
 
 "Plugin 'arnar/vim-matchopen'
@@ -113,9 +121,10 @@ if !exists('set_syntax')
 
     "set t_Co=256
     "let g:solarized_termcolors=256
-    let g:solarized_termcolors=16
+    "let g:solarized_termcolors=16
     let g:solarized_contrast="high"
     let g:solarized_visibility="high"
+    let g:solarized_menu=1
 
     let set_syntax = 1
 endif
@@ -285,6 +294,8 @@ nnoremap <leader>w :StripWhitespace<CR>
 " Strip whitespace on line
 nnoremap <leader>wl V:StripWhitespace<CR>
 
+vnoremap <leader>w :StripWhitespace<CR>
+
 function! Obsession()
     let s:cwd = getcwd()
     let s:dir = $(dirname s:cwd)
@@ -332,12 +343,18 @@ set autoread
 let VCSCommandMapPrefix = '<Leader>z'
 
 " set the path to the current dir, and all its children
-set path=.,,**
+let my_path=system('generate_vim_path.sh')
+let &path=my_path
+function! Update_Path()
+    let my_path=system('generate_vim_path.sh')
+    let &path=my_path
+endfunction
+nnoremap <leader>up :call Update_Path()<CR>
 
 " improve find
 set wildmenu
-" set wildignore+=*.min*
 set wildignorecase
+set wildignore=*.o,*.bin,*.elf,*.obj
 set wildmode=longest:full,full
 
 nnoremap <leader>zo :new<CR>:setlocal buftype=nofile<CR>:read !svn status<CR>
@@ -394,6 +411,12 @@ command! Term ConqueTermTab bash
 
 " BufExplorer
 let g:bufExplorerFindActive=0
+
+" swtich to header file
+nnoremap <leader>a :find %:t:r.
+
+" doxygen syntax
+let g:load_doxygen_syntax=1
 
 " Notes
 " gf - jump to file under cursor and <C-^> or <C-6> to return to previous
