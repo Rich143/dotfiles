@@ -12,13 +12,13 @@ Plugin 'VundleVim/Vundle.vim'
 
 Plugin 'altercation/vim-colors-solarized'
 
-Plugin 'tmhedberg/SimpylFold'
+"Plugin 'tmhedberg/SimpylFold'
 
-Plugin 'christoomey/vim-tmux-navigator'
+"Plugin 'christoomey/vim-tmux-navigator'
 
 Plugin 'scrooloose/nerdtree'
 
-Plugin 'ludovicchabant/vim-gutentags'
+"Plugin 'ludovicchabant/vim-gutentags'
 
 Plugin 'scrooloose/nerdcommenter'
 
@@ -26,15 +26,15 @@ Plugin 'vim-scripts/taglist.vim'
 
 Plugin 'vim-scripts/TaskList.vim'
 
-Plugin 'unblevable/quick-scope'
+"Plugin 'unblevable/quick-scope'
 
 Plugin 'wellle/targets.vim'
 
 Plugin 'ntpeters/vim-better-whitespace'
 
-Plugin 'tpope/vim-obsession'
+"Plugin 'tpope/vim-obsession'
 
-Plugin 'chrisbra/Recover.vim'
+"Plugin 'chrisbra/Recover.vim'
 
 Plugin 'rking/ag.vim'
 
@@ -42,7 +42,8 @@ Plugin 'Chun-Yang/vim-action-ag'
 
 Plugin 'yssl/QFEnter'
 
-Plugin 'Yggdroot/indentLine'
+" Potential slowdown of insert mode
+"Plugin 'Yggdroot/indentLine'
 
 Plugin 'ctrlpvim/ctrlp.vim'
 
@@ -54,19 +55,26 @@ Plugin 'tpope/vim-surround'
 
 Plugin 'bkad/CamelCaseMotion'
 
-Plugin 'rust-lang/rust.vim'
+"Plugin 'rust-lang/rust.vim'
 
 Plugin 'tpope/vim-fugitive'
 
-Plugin 'vim-scripts/Conque-GDB'
+"Plugin 'vim-scripts/Conque-GDB'
 
-"
 Plugin 'ajh17/VimCompletesMe'
 
 Plugin 'octref/RootIgnore'
 
+"Plugin 'djmoch/vim-makejob'
+
+Plugin 'tpope/vim-dispatch'
+
+Plugin 'itchyny/lightline.vim'
+
+"Plugin 'vim-scripts/cvsdiff.vim'
+
 ""https://github.com/vim-scripts/DoxygenToolkit.vim
-Plugin 'mrtazz/DoxygenToolkit.vim'
+"Plugin 'mrtazz/DoxygenToolkit.vim'
 
 "Plugin 'alessandroyorba/despacio' alternate color scheme
 
@@ -93,7 +101,7 @@ filetype plugin indent on    " required
 " Put your non-Plugin stuff after this line
 
 "Ctrl-space
-set hidden " required
+"set hidden " required
 
 " show existing tab with 4 spaces width
 set tabstop=4
@@ -106,7 +114,7 @@ nnoremap <Space> <Nop>
 let mapleader="\<space>"
 
 if has('mouse')
-    set mouse=a
+   "set mouse=a
 endif
 
 set number
@@ -114,19 +122,19 @@ set number
 nnoremap <C-n> <C-I>
 
 if !exists('set_syntax')
-    syntax enable
-    set background=dark
-    let g:solarized_termtrans = 1
-    colorscheme solarized
+   syntax enable
+   set background=dark
+   let g:solarized_termtrans = 1
+   colorscheme solarized
 
-    "set t_Co=256
-    "let g:solarized_termcolors=256
-    "let g:solarized_termcolors=16
-    let g:solarized_contrast="high"
-    let g:solarized_visibility="high"
-    let g:solarized_menu=1
+   "set t_Co=256
+   "let g:solarized_termcolors=256
+   "let g:solarized_termcolors=16
+   let g:solarized_contrast="high"
+   let g:solarized_visibility="high"
+   let g:solarized_menu=1
 
-    let set_syntax = 1
+   let set_syntax = 1
 endif
 
 set hlsearch
@@ -155,8 +163,12 @@ nnoremap <S-Tab> <C-W>W
 " use <C-6> for previous buffer
 
 " Enable folding
-set foldmethod=indent
-set foldlevel=99
+"set foldmethod=indent
+"set foldlevel=99
+" Disable folding
+set nofoldenable
+set foldlevel=0
+set foldmethod=manual
 
 " nnoremap <space> za
 
@@ -167,16 +179,16 @@ au BufNewFile,BufRead *.tex set tw=79
 au BufNewFile,BufRead *.py call SetPythonOptions()
 
 function! SetPythonOptions()
-	set tabstop=4
-	set softtabstop=4
-	set shiftwidth=4
-	"set textwidth=79
-    set textwidth=0
-    set wrapmargin=0
-	set expandtab
-	set autoindent
-	set fileformat=unix
-	set encoding=utf-8
+       set tabstop=4
+       set softtabstop=4
+       set shiftwidth=4
+       "set textwidth=79
+   set textwidth=0
+   set wrapmargin=0
+       set expandtab
+       set autoindent
+       set fileformat=unix
+       set encoding=utf-8
 endfunction
 
 
@@ -188,7 +200,7 @@ set ignorecase
 
 "Completion
 set completeopt=longest,menuone "insert longest common match, and always turn on menu
-let g:SuperTabDefaultCompletionType = "context"
+"let g:SuperTabDefaultCompletionType = "context"
 
 " Cscope.vim
 "nnoremap <leader>fa :call cscope#findInteractive(expand('<cword>'))<CR>
@@ -230,17 +242,78 @@ hi User2 ctermbg=0 ctermfg=3
 hi User3 ctermbg=0 ctermfg=4
 hi User4 ctermbg=0 ctermfg=3
 
+"""
 "statusline
+"""
+let g:lightline = {
+      \ 'colorscheme': 'solarized',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch'   : 'fugitive#head',
+      \   'filename'    : 'LightLineFilename',
+      \   'fileformat'  : 'LightlineFileformat',
+      \   'filetype'    : 'LightlineFiletype',
+      \   'filencoding' : 'LightlineFileencoding',
+      \   'mode'        : 'LightlineMode'
+      \ },
+      \ }
+
+
+"Intersting info on getting filename
+"Although expand('%') often works, there are rare occasions where it does not. But you can force Vim to always present the relative path by calling fnamemodify:
+
+":echo fnamemodify(expand("%"), ":~:.")
+
+"From the manual:
+
+    ":.      Reduce file name to be relative to current directory, if
+            "possible.  File name is unmodified if it is not below the
+            "current directory.
+            "For maximum shortness, use ":~:.".
+
+"The :~ is optional. It will reduce the path relative to your home folder if possible (~/...). (Unfortunately that only works on your home; it won't turn /home/joey into ~joey.)
+
+"If you are limited for space, and can manage with "fuzzy" information about where the file is located, then check out pathshorten() which compresses folder names down to one character:
+
+":echo pathshorten('~/.vim/autoload/myfile.vim')
+"~/.v/a/myfile.vim
+
+"Reference: :h fnamem<Tab> and :h pathsh<Tab>
+function! LightLineFilename()
+  return fnamemodify(expand("%"), ":~:.")
+endfunction
+function! LightlineFileformat()
+    return winwidth(0) > 90 ? &fileformat : ''
+endfunction
+
+function! LightlineFiletype()
+    return winwidth(0) > 90 ? (&filetype !=# '' ? &filetype : 'no ft') : ''
+endfunction
+
+function! LightlineFileencoding()
+    return winwidth(0) > 90 ? (&fenc !=# '' ? &fenc : &enc) : ''
+endfunction
+function! LightlineMode()
+    let fname = expand('%:t')
+    return fname == '__Tagbar__' ? 'Tagbar' :
+                \ fname == 'ControlP' ? 'CtrlP' :
+                \ fname =~ 'NERD_tree' ? 'NERDTree' :
+                \ winwidth(0) > 90 ? lightline#mode() : ''
+endfunction
 set laststatus=2
-set statusline=
-set statusline+=%1*[%n] " buffer number
-" set statusline+=%2*\ %{expand('%:~:h')}\  " file path
-set statusline+=%2*\ %{expand('%:p:h')}\  " file path
-set statusline+=%3*%t " file name
-set statusline+=%2*%m " file name
-" set statusline+=%=%{ObsessionStatus('Session','No-Session')}\ %{gutentags#statusline()}
-set statusline+=%=%4*[%l/%L]\ 
-set statusline+=%{gutentags#statusline()}
+set noshowmode
+"set statusline=
+"set statusline+=%1*[%n] " buffer number
+"" set statusline+=%2*\ %{expand('%:~:h')}\  " file path
+"set statusline+=%2*\ %{expand('%:p:h')}\  " file path
+"set statusline+=%3*%t " file name
+"set statusline+=%2*%m " file name
+"" set statusline+=%=%{ObsessionStatus('Session','No-Session')}\ %{gutentags#statusline()}
+"set statusline+=%=%4*[%l/%L]\ 
+""set statusline+=%{gutentags#statusline()}
 
 " fix backspace
 set backspace=indent,eol,start
@@ -254,6 +327,15 @@ vnoremap / <Esc>/\%><C-R>=line("'<")-1<CR>l\%<<C-R>=line("'>")+1<CR>l
 vnoremap ? <Esc>?\%><C-R>=line("'<")-1<CR>l\%<<C-R>=line("'>")+1<CR>l
 
 nnoremap <leader>r :redraw!<CR>
+if !exists("autocommands_loaded")
+   let autocommands_loaded = 1
+   au FocusGained * :redraw!
+   " Latex
+   au BufNewFile,BufRead *.tex set tw=79
+
+   " Python indentation
+   au BufNewFile,BufRead *.py call SetPythonOptions()
+endif
 
 "TagList
 nnoremap <leader>t :TlistToggle<CR>
@@ -262,17 +344,17 @@ nnoremap <leader>t :TlistToggle<CR>
 nnoremap <leader>d <Plug>TaskList
 let g:tlTokenList = ['TODO:']
 
-"function! s:DiffWithSaved()
-    "let filetype=&ft
-    "diffthis
-    "vnew | r # | normal! 1Gdd
-    "diffthis
-    "exe setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
-"endfunction
-"com! DiffSaved call s:DiffWithSaved()
+function! s:DiffWithSaved()
+   let filetype=&ft
+   diffthis
+   vnew | r # | normal! 1Gdd
+   diffthis
+   exe setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
+endfunction
+com! DiffSaved call s:DiffWithSaved()
 
-command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
-        \ | wincmd p | diffthis
+"command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
+       "\ | wincmd p | diffthis
 
 " toggle paste mode with F2
 set pastetoggle=<F12>
@@ -297,9 +379,9 @@ nnoremap <leader>wl V:StripWhitespace<CR>
 vnoremap <leader>w :StripWhitespace<CR>
 
 function! Obsession()
-    let s:cwd = getcwd()
-    let s:dir = $(dirname s:cwd)
-    echo s:dir
+   let s:cwd = getcwd()
+   let s:dir = $(dirname s:cwd)
+   echo s:dir
 endfunction
 
 inoremap <C-u> <esc>viwUwi
@@ -318,12 +400,12 @@ nnoremap <leader>vs :vs<CR>
 nnoremap <leader>sp :sp<CR>
 
 if executable('ag')
-    " Use Ag over Grep
-    set grepprg=ag\ --nogroup\ --nocolor
+   " Use Ag over Grep
+   set grepprg=ag\ --nogroup\ --nocolor
 
-    "     " Use ag in CtrlP for listing files. Lightning fast and respects
-    "     .gitignore
-    let g:ctrlp_user_command = 'ag %s --ignore=*.[od] -l --nocolor -g ""'
+   "     " Use ag in CtrlP for listing files. Lightning fast and respects
+   "     .gitignore
+   let g:ctrlp_user_command = 'ag %s --ignore=*.[od] -l --nocolor -g ""'
 endif
 
 
@@ -343,13 +425,14 @@ set autoread
 let VCSCommandMapPrefix = '<Leader>z'
 
 " set the path to the current dir, and all its children
-let my_path=system('generate_vim_path.sh')
-let &path=my_path
-function! Update_Path()
-    let my_path=system('generate_vim_path.sh')
-    let &path=my_path
-endfunction
-nnoremap <leader>up :call Update_Path()<CR>
+"let my_path=system('generate_vim_path.sh')
+"let &path=my_path
+"function! Update_Path()
+   ""let my_path=system('generate_vim_path.sh')
+   ""let &path=my_path
+"endfunction
+"nnoremap <leader>up :call Update_Path()<CR>
+set path =.,,
 
 " improve find
 set wildmenu
@@ -360,6 +443,7 @@ set wildmode=longest:full,full
 nnoremap <leader>zo :new<CR>:setlocal buftype=nofile<CR>:read !svn status<CR>
 
 nnoremap <leader>tn :tabnew<CR>
+nnoremap <leader>ts :tab split<CR>
 
 " diff all opened windows then close diffs
 nnoremap <leader>md :windo diffthis<CR>
@@ -384,8 +468,8 @@ let g:ctrlp_switch_buffer = 'et'
 
 let g:ConqueGdb_Leader = '<leader>g'
 function! ArmGDB()
-    "ConqueTermTab bash
-    ConqueGdbExe /Users/Richard/bin/arm/gcc-arm-none-eabi-5_2-2015q4/bin/arm-none-eabi-gdb
+   ""ConqueTermTab bash
+   "ConqueGdbExe /Users/Richard/bin/arm/gcc-arm-none-eabi-5_2-2015q4/bin/arm-none-eabi-gdb
 python << endpython
 import vim
 import os
@@ -418,6 +502,66 @@ nnoremap <leader>a :find %:t:r.
 " doxygen syntax
 let g:load_doxygen_syntax=1
 
+" QFEnter
+let g:qfenter_keymap = {}
+let g:qfenter_keymap.vopen = ['s']
+
+"quick scope
+nnoremap <leader>qst :QuickScopeToggle<CR>
+
+"cvsedit for vim
+function! Edit()
+    execute( 'silent !chmod u+w %' )
+    set noreadonly
+endfunction
+function! NoEdit()
+    execute( 'silent !chmod u+w %' )
+    set noreadonly
+endfunction
+nnoremap <leader>sw :call Edit()<CR>
+"nnoremap <leader>sw :!chmod u+w %<CR><CR>:set noreadonly<CR>
+nnoremap <leader>snw :call NoEdit()<CR>
+"nnoremap <leader>snw :!chmod u-w %<CR><CR>:set readonly<CR>
+
+" ctrlp
+let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:30,results:30'
+
+" for panos building
+"set makeprg=mk
+set makeprg=mkcp.sh
+
+"cscope in quickfix
+nnoremap <leader>sq :set cscopequickfix=s-,c-,d-,i-,t-,e-<CR>
+nnoremap <leader>snq :set cscopequickfix=<CR>
+
+" cvsdiff
+"nnoremap <leader>vd <Plug>Cvsdiffv
+
+" vim completes me
+"let g:vcm_direction = 'p'
+
+command! -complete=shellcmd -nargs=+ Shell call s:RunShellCommand(<q-args>)
+function! s:RunShellCommand(cmdline)
+  echo a:cmdline
+  let expanded_cmdline = a:cmdline
+  for part in split(a:cmdline, ' ')
+     if part[0] =~ '\v[%#<]'
+        let expanded_part = fnameescape(expand(part))
+        let expanded_cmdline = substitute(expanded_cmdline, part, expanded_part, '')
+     endif
+  endfor
+  botright new
+  setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
+  call setline(1, 'You entered:    ' . a:cmdline)
+  call setline(2, 'Expanded Form:  ' .expanded_cmdline)
+  call setline(3,substitute(getline(2),'.','=','g'))
+  execute '$read !'. expanded_cmdline
+  setlocal nomodifiable
+  1
+endfunction
+nnoremap <leader>zo :Shell cvsrw<CR>
+
+set nocursorbind
 " Notes
 " gf - jump to file under cursor and <C-^> or <C-6> to return to previous
 " buffer
