@@ -561,6 +561,10 @@ function! s:RunShellCommand(cmdline)
 endfunction
 nnoremap <leader>zo :Shell cvsrw<CR>
 
+" Highlight the current line, use :match to remove highlight
+" alse sets mark l
+:nnoremap <silent> <Leader>l ml:execute 'match Search /\%'.line('.').'l/'<CR>
+
 set nocursorbind
 " Notes
 " gf - jump to file under cursor and <C-^> or <C-6> to return to previous
