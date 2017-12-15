@@ -36,9 +36,11 @@ Plugin 'ntpeters/vim-better-whitespace'
 
 "Plugin 'chrisbra/Recover.vim'
 
-Plugin 'rking/ag.vim'
+"Plugin 'rking/ag.vim'
 
-Plugin 'Chun-Yang/vim-action-ag'
+Plugin 'mileszs/ack.vim'
+
+"Plugin 'Chun-Yang/vim-action-ag'
 
 Plugin 'yssl/QFEnter'
 
@@ -198,10 +200,6 @@ vnoremap > >gv
 set smartcase
 set ignorecase
 
-"Completion
-set completeopt=longest,menuone "insert longest common match, and always turn on menu
-"let g:SuperTabDefaultCompletionType = "context"
-
 " Cscope.vim
 "nnoremap <leader>fa :call cscope#findInteractive(expand('<cword>'))<CR>
 "nnoremap <leader>l :call ToggleLocationList()<CR>
@@ -342,7 +340,6 @@ nnoremap <leader>t :TlistToggle<CR>
 
 " TaskList (TODO)
 nnoremap <leader>d <Plug>TaskList
-let g:tlTokenList = ['TODO:']
 
 function! s:DiffWithSaved()
    let filetype=&ft
@@ -406,7 +403,16 @@ if executable('ag')
    "     " Use ag in CtrlP for listing files. Lightning fast and respects
    "     .gitignore
    let g:ctrlp_user_command = 'ag %s --ignore=*.[od] -l --nocolor -g ""'
+   let g:ackprg = 'ag --vimgrep'
 endif
+nnoremap <leader>ag :Ack <cword><cr>
+
+" ctrlp
+let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:30,results:30'
+" default to filename mode
+let g:ctrlp_by_filename = 1
+let g:ctrlp_switch_buffer = 'et'
+
 
 
 " python compile errors look like:
@@ -432,13 +438,22 @@ let VCSCommandMapPrefix = '<Leader>z'
    ""let &path=my_path
 "endfunction
 "nnoremap <leader>up :call Update_Path()<CR>
+
 set path =.,,
+
+"Completion
+set completeopt=longest,menuone "insert longest common match, and always turn on menu
+"let g:SuperTabDefaultCompletionType = "context"
 
 " improve find
 set wildmenu
 set wildignorecase
 set wildignore=*.o,*.bin,*.elf,*.obj
 set wildmode=longest:full,full
+
+" swtich to header file
+nnoremap <leader>a :find %:t:r.
+
 
 nnoremap <leader>zo :new<CR>:setlocal buftype=nofile<CR>:read !svn status<CR>
 
@@ -454,17 +469,13 @@ nnoremap <leader>mo :diffoff!<CR>
 nnoremap <leader>mc :diffthis<CR>
 
 " only search for completion in current file, too slow otherwise
-set complete-=i
+"set complete-=i
 
 " CamelCaseMotion
 call camelcasemotion#CreateMotionMappings('\')
 "omap <silent> \iw <Plug>CamelCaseMotion_iw
 "xmap <silent> \iw <Plug>CamelCaseMotion_iw
 
-" ctrlp
-" default to filename mode
-let g:ctrlp_by_filename = 1
-let g:ctrlp_switch_buffer = 'et'
 
 let g:ConqueGdb_Leader = '<leader>g'
 function! ArmGDB()
@@ -496,9 +507,6 @@ command! Term ConqueTermTab bash
 " BufExplorer
 let g:bufExplorerFindActive=0
 
-" swtich to header file
-nnoremap <leader>a :find %:t:r.
-
 " doxygen syntax
 let g:load_doxygen_syntax=1
 
@@ -522,9 +530,6 @@ nnoremap <leader>sw :call Edit()<CR>
 "nnoremap <leader>sw :!chmod u+w %<CR><CR>:set noreadonly<CR>
 nnoremap <leader>snw :call NoEdit()<CR>
 "nnoremap <leader>snw :!chmod u-w %<CR><CR>:set readonly<CR>
-
-" ctrlp
-let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:30,results:30'
 
 " for panos building
 "set makeprg=mk
