@@ -1,109 +1,93 @@
 set nocompatible              " be iMproved, required
-filetype off                  " required
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
+call plug#begin('~/.vim/plugged')
 
-Plugin 'altercation/vim-colors-solarized'
+Plug 'junegunn/vim-plug'
 
-"Plugin 'tmhedberg/SimpylFold'
+Plug 'altercation/vim-colors-solarized'
 
-"Plugin 'christoomey/vim-tmux-navigator'
+"Plug 'tmhedberg/SimpylFold'
 
-Plugin 'scrooloose/nerdtree'
+"Plug 'christoomey/vim-tmux-navigator'
 
-"Plugin 'ludovicchabant/vim-gutentags'
+Plug 'scrooloose/nerdtree'
 
-Plugin 'scrooloose/nerdcommenter'
+"Plug 'ludovicchabant/vim-gutentags'
 
-Plugin 'vim-scripts/taglist.vim'
+Plug 'scrooloose/nerdcommenter'
 
-Plugin 'vim-scripts/TaskList.vim'
+Plug 'vim-scripts/taglist.vim'
 
-"Plugin 'unblevable/quick-scope'
+Plug 'vim-scripts/TaskList.vim'
 
-Plugin 'wellle/targets.vim'
+"Plug 'unblevable/quick-scope'
 
-Plugin 'ntpeters/vim-better-whitespace'
+Plug 'wellle/targets.vim'
 
-"Plugin 'tpope/vim-obsession'
+Plug 'ntpeters/vim-better-whitespace'
 
-"Plugin 'chrisbra/Recover.vim'
+"Plug 'tpope/vim-obsession'
 
-"Plugin 'rking/ag.vim'
+"Plug 'chrisbra/Recover.vim'
 
-Plugin 'mileszs/ack.vim'
+"Plug 'rking/ag.vim'
 
-"Plugin 'Chun-Yang/vim-action-ag'
+Plug 'mileszs/ack.vim'
 
-Plugin 'yssl/QFEnter'
+"Plug 'Chun-Yang/vim-action-ag'
+
+Plug 'yssl/QFEnter'
 
 " Potential slowdown of insert mode
-"Plugin 'Yggdroot/indentLine'
+"Plug 'Yggdroot/indentLine'
 
-Plugin 'ctrlpvim/ctrlp.vim'
+Plug 'ctrlpvim/ctrlp.vim'
 
-Plugin 'jlanzarotta/bufexplorer'
+Plug 'jlanzarotta/bufexplorer'
 
-Plugin 'vcscommand.vim'
+Plug 'vim-scripts/vcscommand.vim'
 
-Plugin 'tpope/vim-surround'
+Plug 'tpope/vim-surround'
 
-Plugin 'bkad/CamelCaseMotion'
+Plug 'bkad/CamelCaseMotion'
 
-"Plugin 'rust-lang/rust.vim'
+"Plug 'rust-lang/rust.vim'
 
-Plugin 'tpope/vim-fugitive'
+Plug 'tpope/vim-fugitive'
 
-"Plugin 'vim-scripts/Conque-GDB'
+"Plug 'vim-scripts/Conque-GDB'
 
-Plugin 'ajh17/VimCompletesMe'
+Plug 'ajh17/VimCompletesMe'
 
-Plugin 'octref/RootIgnore'
+Plug 'octref/RootIgnore'
 
-"Plugin 'djmoch/vim-makejob'
+"Plug 'djmoch/vim-makejob'
 
-Plugin 'tpope/vim-dispatch'
+Plug 'tpope/vim-dispatch'
 
-Plugin 'itchyny/lightline.vim'
+Plug 'itchyny/lightline.vim'
 
-"Plugin 'vim-scripts/cvsdiff.vim'
+"Plug 'vim-scripts/cvsdiff.vim'
 
 ""https://github.com/vim-scripts/DoxygenToolkit.vim
-"Plugin 'mrtazz/DoxygenToolkit.vim'
+"Plug 'mrtazz/DoxygenToolkit.vim'
 
-"Plugin 'alessandroyorba/despacio' alternate color scheme
+"Plug 'alessandroyorba/despacio' alternate color scheme
 
-"Plugin 'arnar/vim-matchopen'
-"Plugin 'vim-scripts/Highlight-UnMatched-Brackets'
+"Plug 'arnar/vim-matchopen'
+"Plug 'vim-scripts/Highlight-UnMatched-Brackets'
 
-"Plugin 'ervandew/supertab'
+"Plug 'ervandew/supertab'
 
-" Plugin 'vim-scripts/cscope.vim'
+" Plug 'vim-scripts/cscope.vim'
 
 " All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
-
-"Ctrl-space
-"set hidden " required
+call plug#end()            " required
 
 " show existing tab with 4 spaces width
 set tabstop=4
