@@ -77,6 +77,10 @@ Plug 'tpope/vim-dispatch'
 
 Plug 'itchyny/lightline.vim'
 
+Plug 'Shougo/vimproc.vim', {'do' : 'make'}
+
+Plug 'idanarye/vim-vebugger'
+
 "Plug 'vim-scripts/cvsdiff.vim'
 
 ""https://github.com/vim-scripts/DoxygenToolkit.vim
