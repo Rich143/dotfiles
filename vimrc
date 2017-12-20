@@ -1,3 +1,8 @@
+"
+" Richard Matthews
+" December 18, 2017
+"
+
 set nocompatible              " be iMproved, required
 
 if empty(glob('~/.vim/autoload/plug.vim'))
