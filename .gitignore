@@ -2,3 +2,4 @@ vim/bundle
 vim/plugged
 *.sw*
 vim/autoload/plug.vim
+tags
