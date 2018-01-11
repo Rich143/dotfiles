@@ -22,7 +22,7 @@ Plug 'altercation/vim-colors-solarized'
 
 Plug 'scrooloose/nerdtree'
 
-"Plug 'ludovicchabant/vim-gutentags'
+Plug 'ludovicchabant/vim-gutentags'
 
 Plug 'scrooloose/nerdcommenter'
 
@@ -524,10 +524,6 @@ nnoremap <leader>sw :call Edit()<CR>
 nnoremap <leader>snw :call NoEdit()<CR>
 "nnoremap <leader>snw :!chmod u-w %<CR><CR>:set readonly<CR>
 
-" for panos building
-"set makeprg=mk
-set makeprg=mkcp.sh
-
 "cscope in quickfix
 nnoremap <leader>sq :set cscopequickfix=s-,c-,d-,i-,t-,e-<CR>
 nnoremap <leader>snq :set cscopequickfix=<CR>
@@ -564,6 +560,11 @@ nnoremap <leader>zo :Shell cvsrw<CR>
 :nnoremap <silent> <Leader>l ml:execute 'match Search /\%'.line('.').'l/'<CR>
 
 set nocursorbind
+
+" Better joining of comments
+if v:version > 703 || v:version == 703 && has('patch541')
+  set formatoptions+=j
+endif
 " Notes
 " gf - jump to file under cursor and <C-^> or <C-6> to return to previous
 " buffer
