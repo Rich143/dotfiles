@@ -5,6 +5,9 @@
 
 set nocompatible              " be iMproved, required
 
+if has('python3')
+endif
+
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
@@ -51,7 +54,7 @@ Plug 'yssl/QFEnter'
 " Potential slowdown of insert mode
 "Plug 'Yggdroot/indentLine'
 
-Plug 'ctrlpvim/ctrlp.vim'
+"Plug 'ctrlpvim/ctrlp.vim'
 
 Plug 'jlanzarotta/bufexplorer'
 
@@ -67,19 +70,51 @@ Plug 'tpope/vim-fugitive'
 
 "Plug 'vim-scripts/Conque-GDB'
 
-Plug 'ajh17/VimCompletesMe'
+"Plug 'ajh17/VimCompletesMe'
 
 Plug 'octref/RootIgnore'
 
 "Plug 'djmoch/vim-makejob'
 
-Plug 'tpope/vim-dispatch'
+"Plug 'tpope/vim-dispatch'
 
 Plug 'itchyny/lightline.vim'
 
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 
 Plug 'idanarye/vim-vebugger'
+
+Plug 'krisajenkins/vim-projectlocal'
+
+Plug 'Addisonbean/Vim-Xcode-Theme'
+
+Plug 'rafi/awesome-vim-colorschemes'
+
+Plug 'felixhummel/setcolors.vim'
+
+Plug 'prabirshrestha/async.vim'
+
+Plug 'tpope/vim-sleuth'
+
+Plug 'djmoch/vim-makejob'
+
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
+
+"Plug 'hari-rangarajan/CCTree'
 
 "Plug 'vim-scripts/cvsdiff.vim'
 
@@ -98,12 +133,12 @@ Plug 'idanarye/vim-vebugger'
 " All of your Plugins must be added before the following line
 call plug#end()            " required
 
-" show existing tab with 4 spaces width
-set tabstop=4
-" " when indenting with '>', use 4 spaces width
-set shiftwidth=4
-" " On pressing tab, insert 4 spaces
-set expandtab
+"" show existing tab with 4 spaces width
+"set tabstop=4
+"" " when indenting with '>', use 4 spaces width
+"set shiftwidth=4
+"" " On pressing tab, insert 4 spaces
+"set expandtab
 
 nnoremap <Space> <Nop>
 let mapleader="\<space>"
@@ -120,7 +155,8 @@ if !exists('set_syntax')
    syntax enable
    set background=dark
    let g:solarized_termtrans = 1
-   colorscheme solarized
+   set guifont=Monaco:h14
+   colorscheme solarized8_flat
 
    "set t_Co=256
    "let g:solarized_termcolors=256
@@ -193,25 +229,23 @@ vnoremap > >gv
 set smartcase
 set ignorecase
 
-" Cscope.vim
-"nnoremap <leader>fa :call cscope#findInteractive(expand('<cword>'))<CR>
-"nnoremap <leader>l :call ToggleLocationList()<CR>
-"" s: Find this C symbol
-"nnoremap  <leader>fs :call cscope#find('s', expand('<cword>'))<CR>
-"" g: Find this definition
-"nnoremap  <leader>fg :call cscope#find('g', expand('<cword>'))<CR>
-"" d: Find functions called by this function
-"nnoremap  <leader>fd :call cscope#find('d', expand('<cword>'))<CR>
-"" c: Find functions calling this function
-"nnoremap  <leader>fc :call cscope#find('c', expand('<cword>'))<CR>
-"" t: Find this text string
-"nnoremap  <leader>ft :call cscope#find('t', expand('<cword>'))<CR>
-"" e: Find this egrep pattern
-"nnoremap  <leader>fe :call cscope#find('e', expand('<cword>'))<CR>
-"" f: Find this file
-"nnoremap  <leader>ff :call cscope#find('f', expand('<cword>'))<CR>
-"" i: Find files #including this file
-"nnoremap  <leader>fi :call cscope#find('i', expand('<cword>'))<CR>
+" Cscope
+" s: Find this C symbol
+nnoremap  <leader>fs :cscope find s <cword><CR>
+" g: Find this definition
+nnoremap  <leader>fg :cscope find g <cword><CR>
+" d: Find functions called by this function
+nnoremap  <leader>fd :cscope find d <cword><CR>
+" c: Find functions calling this function
+nnoremap  <leader>fc :cscope find c <cword><CR>
+" t: Find this text string
+nnoremap  <leader>ft :cscope find t <cword><CR>
+" e: Find this egrep pattern
+nnoremap  <leader>fe :cscope find e <cword><CR>
+" f: Find this file
+nnoremap  <leader>ff :cscope find f <cword><CR>
+" i: Find files #including this file
+nnoremap  <leader>fi :cscope find i <cword><CR>
 
 
 "NERDTree
@@ -220,7 +254,8 @@ nnoremap <leader>nf :NERDTreeFind<CR>
 
 "guten-tags
 let g:gutentags_project_root=['.svn']
-
+"let g:gutentags_modules=['ctags', 'cscope']
+let g:gutentags_modules=['ctags']
 
 " resize
 nnoremap <leader>- :resize -5<CR>
@@ -240,9 +275,15 @@ let g:lightline = {
       \ 'colorscheme': 'solarized',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
-      \ },
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ],
+      \ 'right': [
+      \            [ 'lineinfo' ],
+      \            [ 'percent' ],
+      \            [ 'fileformat', 'fileencoding', 'filetype' ],
+      \            [ 'tags' ],
+      \            ] },
       \ 'component_function': {
+      \   'tags'        : 'gutentags#statusline',
       \   'gitbranch'   : 'fugitive#head',
       \   'filename'    : 'LightLineFilename',
       \   'fileformat'  : 'LightlineFileformat',
@@ -296,6 +337,13 @@ function! LightlineMode()
 endfunction
 set laststatus=2
 set noshowmode
+
+" Autorefresh gutentags status
+augroup MyGutentagsStatusLineRefresher
+    autocmd!
+    autocmd User GutentagsUpdating call lightline#update()
+    autocmd User GutentagsUpdated call lightline#update()
+augroup END
 "set statusline=
 "set statusline+=%1*[%n] " buffer number
 "" set statusline+=%2*\ %{expand('%:~:h')}\  " file path
@@ -311,7 +359,7 @@ set backspace=indent,eol,start
 
 
 " highlight column 79
-set cc=79
+set colorcolumn=79
 
 " search within visual selection
 vnoremap / <Esc>/\%><C-R>=line("'<")-1<CR>l\%<<C-R>=line("'>")+1<CR>l
@@ -395,8 +443,8 @@ if executable('ag')
 
    "     " Use ag in CtrlP for listing files. Lightning fast and respects
    "     .gitignore
-   let g:ctrlp_user_command = 'ag %s --ignore=*.[od] -l --nocolor -g ""'
-   let g:ackprg = 'ag --vimgrep'
+   let g:ctrlp_user_command = 'ag %s --path-to-ignore ~/.ignore --ignore=*.[od] -l --nocolor -g ""'
+   let g:ackprg = 'ag --vimgrep --path-to-ignore ~/.ignore'
 endif
 nnoremap <leader>ag :Ack <cword><cr>
 
@@ -405,6 +453,37 @@ let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:30,results:30'
 " default to filename mode
 let g:ctrlp_by_filename = 1
 let g:ctrlp_switch_buffer = 'et'
+
+" FZF
+" Customize fzf colors to match your color scheme
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
+"let g:fzf_colors =
+"\ { 'fg':      ['fg', 'Normal'],
+  "\ 'bg':      ['bg', 'Normal'],
+  "\ 'hl':      ['fg', 'Comment'],
+  "\ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  "\ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  "\ 'hl+':     ['fg', 'Statement'],
+  "\ 'info':    ['fg', 'PreProc'],
+  "\ 'border':  ['fg', 'Ignore'],
+  "\ 'prompt':  ['fg', 'Conditional'],
+  "\ 'pointer': ['fg', 'Exception'],
+  "\ 'marker':  ['fg', 'Keyword'],
+  "\ 'spinner': ['fg', 'Label'],
+  "\ 'header':  ['fg', 'Comment'] }
+nnoremap <leader>p :Files<CR>
 
 
 
@@ -565,6 +644,51 @@ set nocursorbind
 if v:version > 703 || v:version == 703 && has('patch541')
   set formatoptions+=j
 endif
+
+set cscopeprg=/usr/local/bin/cscope
+
+set makeprg=make-color-strip
+
+
+" deoplete
+" deoplete.vim contains vim settings relevant to the deoplete autocompletion
+" plugin
+" for more details about my neovim setup see:
+" http://afnan.io/2018-04-12/my-neovim-development-setup/
+
+" deoplete options
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#enable_smart_case = 1
+
+" disable autocomplete by default
+let b:deoplete_disable_auto_complete=1 
+let g:deoplete_disable_auto_complete=1
+call deoplete#custom#buffer_option('auto_complete', v:false)
+
+if !exists('g:deoplete#omni#input_patterns')
+    let g:deoplete#omni#input_patterns = {}
+endif
+
+" Disable the candidates in Comment/String syntaxes.
+call deoplete#custom#source('_',
+            \ 'disabled_syntaxes', ['Comment', 'String'])
+
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+
+" set sources
+call deoplete#custom#option('sources', { 'c': ['LanguageClient'] })
+"let g:deoplete#sources = {}
+"let g:deoplete#sources.cpp = ['LanguageClient']
+"let g:deoplete#sources.c = ['LanguageClient']
+"let g:deoplete#sources.vim = ['vim']
+
+"Language Client
+let g:LanguageClient_loadSettings = 1
+let g:LanguageClient_settingsPath = '/Users/richardmatthews/dotfiles/cquery/settings.json'
+let g:LanguageClient_serverCommands = {
+\ 'c': ['/usr/local/bin/cquery', '--language-server', '--log-stdin-stdout-to-stderr', '--log-file=/tmp/cq.log']
+\ }
+
 " Notes
 " gf - jump to file under cursor and <C-^> or <C-6> to return to previous
 " buffer

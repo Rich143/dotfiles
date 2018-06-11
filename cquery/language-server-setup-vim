@@ -1,0 +1,4 @@
+Install cquery 'brew install cquery'
+Install language client plugin, configure vimrc
+create settings.json for cquery init settings
+pip3 install neovim -- necessary to get neovim rpc lib plugin vim-hug-neovim-rpc to work

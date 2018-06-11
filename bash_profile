@@ -13,7 +13,9 @@ export PATH
 export MANPATH=$MANPATH:$HOME/share/man
 export GREP_OPTIONS='--color=auto'
 
-eval `dircolors ~/.dircolors.dark`
+if [ -f ~/.dircolors.dark ]; then
+    eval `dircolors ~/.dircolors.dark`
+fi
 
 # Reset
 Color_Off='\[\e[0m\]'       # Text Reset
@@ -34,14 +36,25 @@ BWhite='\[\e[1;37m\]'       # White
 PS1="${Green}\u${Color_Off}@${Blue}\h${Color_Off}:[${Yellow}\w${Color_Off}]${Purple}$ ${BWhite}"
 #PS1="${BPurple}\A ${Green}\u${Color_Off}@${Blue}\h${Color_Off}:[${Yellow}\w${Color_Off}]${Purple}$ ${BWhite}"
 
+eval `ssh-agent -s`
+[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
+
 # reset color after prompt
-trap "echo -ne '\e[0m'" DEBUG
+#trap "echo -ne '\e[0m'" DEBUG
 
 #export PATH=$HOME/local/bin:$HOME/vim74/bin:$PATH
 
-alias svnc="svn status"
-alias code="cd /opt/cvsdirs/rmatthews/"
+#alias svnc="svn status"
+#alias code="cd /opt/cvsdirs/rmatthews/"
 
-source ~/bin/svn.bash
+#source ~/bin/svn.bash
 
-alias solsend="/home/rmatthews/semp/solsend"
+#alias solsend="/home/rmatthews/semp/solsend"
+
+# Use ssh-add to cause ssh-agent to remember your passphrase for the duration of the shell
+#ssh-add
+
+# Setting PATH for Python 3.6
+# The original version is saved in .bash_profile.pysave
+PATH="/Library/Frameworks/Python.framework/Versions/3.6/bin:${PATH}"
+export PATH

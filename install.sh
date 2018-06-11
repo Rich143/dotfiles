@@ -1,4 +1,4 @@
-DOTS="vim vimrc"
+DOTS="vim vimrc bashrc bash_profile"
 
 check_exists() {
     file=$1
@@ -19,7 +19,7 @@ check_exists() {
                 echo "mv $file $file.bak"
                 mv $file $file.bak
             else
-                exit 1
+                continue
             fi
         fi
     fi
