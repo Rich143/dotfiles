@@ -1,0 +1,17 @@
+[alias]
+	cm = commit
+	st = status
+	br = branch
+	co = checkout
+	vis = !gitk --all
+	unstage = reset HEAD --
+[user]
+	name = Richard Matthews
+	email = richard_matthews@apple.com
+[core]
+	excludesfile = /Users/richardmatthews/.gitignore
+[merge]
+	tool = diffconflicts
+[mergetool "diffconflicts"]
+	cmd = diffconflicts gvim $BASE $LOCAL $REMOTE $MERGED
+	trustExitCode = true

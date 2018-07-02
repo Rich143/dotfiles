@@ -1,0 +1,5 @@
+#!/bin/bash
+
+export NO_COLOR
+make "$@" 2>&1 | perl -pe 's/\x1b\[[0-9;]*[a-zA-Z]//g'
+#make $1 | perl -MTerm::ANSIColor=colorstrip -ne 'print colorstrip($_)'

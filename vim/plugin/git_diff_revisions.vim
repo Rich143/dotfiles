@@ -45,7 +45,7 @@ function! DiffFile()
     only
     wincmd s
     execute 'resize '.winheight
-    wincmd j
+    wincmd k
     execute 'cd '.gitroot
     execute 'edit '.filename
     execute 'Gdiff '.branchname

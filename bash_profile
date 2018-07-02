@@ -58,3 +58,7 @@ eval `ssh-agent -s`
 # The original version is saved in .bash_profile.pysave
 PATH="/Library/Frameworks/Python.framework/Versions/3.6/bin:${PATH}"
 export PATH
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
+
+export PATH=$PATH:"/Users/richardmatthews/Library/Python/2.7/bin"

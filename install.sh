@@ -1,4 +1,4 @@
-DOTS="vim vimrc bashrc bash_profile"
+DOTS="vim vimrc bashrc bash_profile gitconfig gitignore bin"
 
 check_exists() {
     file=$1

@@ -70,7 +70,7 @@ Plug 'tpope/vim-fugitive'
 
 "Plug 'vim-scripts/Conque-GDB'
 
-"Plug 'ajh17/VimCompletesMe'
+Plug 'ajh17/VimCompletesMe'
 
 Plug 'octref/RootIgnore'
 
@@ -92,27 +92,33 @@ Plug 'rafi/awesome-vim-colorschemes'
 
 Plug 'felixhummel/setcolors.vim'
 
-Plug 'prabirshrestha/async.vim'
 
 Plug 'tpope/vim-sleuth'
 
 Plug 'djmoch/vim-makejob'
 
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
+  Plug 'junegunn/fzf.vim'
 
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
+Plug 'prabirshrestha/async.vim'
+  Plug 'prabirshrestha/vim-lsp'
 
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
+"if has("gui_running")
+  "if has('nvim')
+    "Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+  "else
+    "Plug 'Shougo/deoplete.nvim'
+    "Plug 'roxma/nvim-yarp'
+    "Plug 'roxma/vim-hug-neovim-rpc'
+  "endif
+"endif
+
+"Plug 'autozimu/LanguageClient-neovim', {
+    "\ 'branch': 'next',
+    "\ 'do': 'bash install.sh',
+    "\ }
+
+Plug 'tommcdo/vim-kangaroo'
 
 "Plug 'hari-rangarajan/CCTree'
 
@@ -204,23 +210,23 @@ set foldmethod=manual
 " nnoremap <space> za
 
 " Latex
-au BufNewFile,BufRead *.tex set tw=79
+"au BufNewFile,BufRead *.tex set tw=79
 
 " Python indentation
-au BufNewFile,BufRead *.py call SetPythonOptions()
+"au BufNewFile,BufRead *.py call SetPythonOptions()
 
-function! SetPythonOptions()
-       set tabstop=4
-       set softtabstop=4
-       set shiftwidth=4
-       "set textwidth=79
-   set textwidth=0
-   set wrapmargin=0
-       set expandtab
-       set autoindent
-       set fileformat=unix
-       set encoding=utf-8
-endfunction
+"function! SetPythonOptions()
+       "set tabstop=4
+       "set softtabstop=4
+       "set shiftwidth=4
+       ""set textwidth=79
+   "set textwidth=0
+   "set wrapmargin=0
+       "set expandtab
+       "set autoindent
+       "set fileformat=unix
+       "set encoding=utf-8
+"endfunction
 
 
 vnoremap < <gv
@@ -373,7 +379,7 @@ if !exists("autocommands_loaded")
    au BufNewFile,BufRead *.tex set tw=79
 
    " Python indentation
-   au BufNewFile,BufRead *.py call SetPythonOptions()
+   "au BufNewFile,BufRead *.py call SetPythonOptions()
 endif
 
 "TagList
@@ -394,7 +400,7 @@ com! DiffSaved call s:DiffWithSaved()
 "command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
        "\ | wincmd p | diffthis
 
-" toggle paste mode with F2
+" toggle paste mode with F12
 set pastetoggle=<F12>
 
 " use alt-] to open tag definition in new vertical split
@@ -405,8 +411,8 @@ set splitright
 set splitbelow
 
 " navigate quickfix list
-nnoremap cn <esc>:cn<CR>
-nnoremap cp <esc>:cp<CR>
+nnoremap cn :cn<CR>
+nnoremap cp :cp<CR>
 
 " whitespace
 nnoremap <leader>w :StripWhitespace<CR>
@@ -484,6 +490,8 @@ let g:fzf_colors =
   "\ 'spinner': ['fg', 'Label'],
   "\ 'header':  ['fg', 'Comment'] }
 nnoremap <leader>p :Files<CR>
+command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
+imap <c-x><c-f> <plug>(fzf-complete-file-ag)
 
 
 
@@ -512,6 +520,7 @@ let VCSCommandMapPrefix = '<Leader>z'
 "nnoremap <leader>up :call Update_Path()<CR>
 
 set path =.,,
+set path +=**
 
 "Completion
 set completeopt=longest,menuone "insert longest common match, and always turn on menu
@@ -650,44 +659,178 @@ set cscopeprg=/usr/local/bin/cscope
 set makeprg=make-color-strip
 
 
-" deoplete
-" deoplete.vim contains vim settings relevant to the deoplete autocompletion
-" plugin
-" for more details about my neovim setup see:
-" http://afnan.io/2018-04-12/my-neovim-development-setup/
+"" deoplete
+"" deoplete.vim contains vim settings relevant to the deoplete autocompletion
+"" plugin
+"" for more details about my neovim setup see:
+"" http://afnan.io/2018-04-12/my-neovim-development-setup/
 
-" deoplete options
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#enable_smart_case = 1
+"" deoplete options
+"if has("gui_running")
+  "let g:deoplete#enable_at_startup = 1
+  "let g:deoplete#enable_smart_case = 1
 
-" disable autocomplete by default
-let b:deoplete_disable_auto_complete=1 
-let g:deoplete_disable_auto_complete=1
-call deoplete#custom#buffer_option('auto_complete', v:false)
+  "" disable autocomplete by default
+  "let b:deoplete_disable_auto_complete=1
+  "let g:deoplete_disable_auto_complete=1
+  "call deoplete#custom#option('auto_complete', v:false)
 
-if !exists('g:deoplete#omni#input_patterns')
-    let g:deoplete#omni#input_patterns = {}
+  "if !exists('g:deoplete#omni#input_patterns')
+    "let g:deoplete#omni#input_patterns = {}
+  "endif
+
+  "" Disable the candidates in Comment/String syntaxes.
+  "call deoplete#custom#source('_',
+        "\ 'disabled_syntaxes', ['Comment', 'String'])
+
+  "autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+  "inoremap <silent><expr> <TAB>
+        "\ pumvisible() ? "\<C-n>" :
+        "\ <SID>check_back_space() ? "\<TAB>" :
+        "\ deoplete#mappings#manual_complete()
+  "inoremap <silent><expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
+  "function! s:check_back_space() abort "{{{
+    "let col = col('.') - 1
+    "return !col || getline('.')[col - 1]  =~ '\s'
+  "endfunction"}}}
+
+  "call deoplete#custom#source('_',  'max_menu_width', 0)
+  "call deoplete#custom#source('_',  'max_abbr_width', 0)
+  "call deoplete#custom#source('_',  'max_kind_width', 0)
+  "call deoplete#custom#option('max_list', 20)
+  "call deoplete#custom#option('refresh_always', v:true)
+
+  "" set sources
+  "call deoplete#custom#option('sources', { 'c': ['LanguageClient'] })
+  "call deoplete#custom#source('LanguageClient', 'rank', 5000)
+  ""let g:deoplete#sources = {}
+  ""let g:deoplete#sources.cpp = ['LanguageClient']
+  ""let g:deoplete#sources.c = ['LanguageClient']
+  ""let g:deoplete#sources.vim = ['vim']
+"endif
+
+""Language Client
+"let g:LanguageClient_loadSettings = 1
+"let g:LanguageClient_settingsPath = '/Users/richardmatthews/dotfiles/cquery/settings.json'
+"let g:LanguageClient_serverCommands = {
+"\ 'c': ['/usr/local/bin/cquery', '--language-server', '--log-stdin-stdout-to-stderr', '--log-file=/tmp/cq.log'],
+"\ 'cpp': ['/usr/local/bin/cquery', '--language-server', '--log-stdin-stdout-to-stderr', '--log-file=/tmp/cq.log']
+"\ }
+"let g:LanguageClient_diagnosticsList = 'Disabled'
+"let g:LanguageClient_diagnosticsDisplay = {
+      "\1: {
+      "\     "name": "Error",
+      "\     "texthl": "SpellLocal",
+      "\     "signText": "X",
+      "\     "signTexthl": "DiffDelete",
+      "\ },
+      "\ 2: {
+      "\     "name": "Warning",
+      "\     "texthl": "ALEWarning",
+      "\     "signText": "W",
+      "\     "signTexthl": "DiffChange",
+      "\ },
+      "\ 3: {
+      "\     "name": "Information",
+      "\     "texthl": "ALEInfo",
+      "\     "signText": "i",
+      "\     "signTexthl": "DiffAdd",
+      "\ },
+      "\ 4: {
+      "\     "name": "Hint",
+      "\     "texthl": "ALEInfo",
+      "\     "signText": "➤",
+      "\     "signTexthl": "DiffAdd",
+      "\ },
+"\ }
+
+"let g:LanguageClient_selectionUI = 'location-list'
+
+"" Keep signcolumn (gutter) open all the time when using language client
+"" This is where syntax errors show up beside the line numbers
+"augroup LanguageClient_config
+  "autocmd!
+  "autocmd User LanguageClientStarted setlocal signcolumn=yes
+  "autocmd User LanguageClientStopped setlocal signcolumn=auto
+"augroup END
+
+"nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+""nnoremap <silent> gd zp:call LanguageClient#textDocument_definition()<CR>
+"nnoremap gd :KangarooPush<CR>:call LanguageClient#textDocument_definition()<CR>
+"nnoremap gr :KangarooPush<CR>:call LanguageClient#textDocument_references()<CR>
+"nnoremap gb :KangarooPop<CR>
+"nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+
+" Vim-LSP
+if executable('cquery')
+   au User lsp_setup call lsp#register_server({
+      \ 'name': 'cquery',
+      \ 'cmd': {server_info->['cquery']},
+      \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
+      \ 'initialization_options': { 'cacheDirectory': '/tmp/cquery.cache' },
+      \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
+      \ })
 endif
 
-" Disable the candidates in Comment/String syntaxes.
-call deoplete#custom#source('_',
-            \ 'disabled_syntaxes', ['Comment', 'String'])
+let g:lsp_signs_enabled = 1         " enable signs
+let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
+let g:lsp_signs_error = {'text': '✗'}
+let g:lsp_signs_warning = {'text': '‼'}
+let g:lsp_signs_hint = {'text': '~'}
 
-autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+nnoremap <silent> K :LspHover<CR>
+nnoremap gd :KangarooPush<CR>:LspDefinition<CR>
+nnoremap gr :KangarooPush<CR>:LspReferences<CR>
+nnoremap gb :KangarooPop<CR>
+nnoremap <silent> <F2> :LspRename<CR>
 
-" set sources
-call deoplete#custom#option('sources', { 'c': ['LanguageClient'] })
-"let g:deoplete#sources = {}
-"let g:deoplete#sources.cpp = ['LanguageClient']
-"let g:deoplete#sources.c = ['LanguageClient']
-"let g:deoplete#sources.vim = ['vim']
+let g:lsp_log_verbose = 1
+let g:lsp_log_file = expand('~/vim-lsp.log')
 
-"Language Client
-let g:LanguageClient_loadSettings = 1
-let g:LanguageClient_settingsPath = '/Users/richardmatthews/dotfiles/cquery/settings.json'
-let g:LanguageClient_serverCommands = {
-\ 'c': ['/usr/local/bin/cquery', '--language-server', '--log-stdin-stdout-to-stderr', '--log-file=/tmp/cq.log']
-\ }
+" for asyncomplete.vim log
+let g:asyncomplete_log_file = expand('~/asyncomplete.log')
+
+"vimcompletesme
+autocmd FileType c let b:vcm_tab_complete = "omni"
+autocmd FileType cpp let b:vcm_tab_complete = "omni"
+
+"xcodebuild
+function! Xcodebuild()
+  let cmd = 'make-color-strip AGC_ENTITLEMENTS_BUILD=0 build'
+  call XCB_RunBuildCommand(cmd)
+endfunction
+
+function! XCB_RunBuildCommand(cmd)
+  " Thanks to jason @ http://vios.eraserhead.net/blog/2011/09/25/driving-kiwi-with-vim/
+  let l:BuildLog = "build/vim.log"
+  "if l:bf bufname("%") != ""
+    "silent write
+  "endif
+  echo "Building.."
+  let l:StartTime = reltime()
+  exec "silent !" . a:cmd . " >" . l:BuildLog . " 2>&1"
+
+  " xcodebuild does NOT set exit code properly, so check the build log
+  exec "silent !grep -q '^\*\* BUILD FAILED' " . l:BuildLog
+  redraw!
+  if !v:shell_error
+    set errorformat=
+          \%f:%l:%c:{%*[^}]}:\ error:\ %m,
+          \%f:%l:%c:{%*[^}]}:\ fatal\ error:\ %m,
+          \%f:%l:%c:{%*[^}]}:\ warning:\ %m,
+          \%f:%l:%c:\ error:\ %m,
+          \%f:%l:%c:\ fatal\ error:\ %m,
+          \%f:%l:%c:\ warning:\ %m,
+          \%f:%l:\ Error:\ %m,
+          \%f:%l:\ error:\ %m,
+          \%f:%l:\ fatal\ error:\ %m,
+          \%f:%l:\ warning:\ %m
+    execute "cfile! " . l:BuildLog
+  else
+    echo "Building.. OK - " . reltimestr(reltime(l:StartTime)) . " seconds"
+  endif
+endfunction
+
 
 " Notes
 " gf - jump to file under cursor and <C-^> or <C-6> to return to previous

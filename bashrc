@@ -49,4 +49,7 @@ alias ag='ag --path-to-ignore ~/.ignore'
 
 set -o vi
 
+export SDKROOT=`xcrun --sdk macosxinternal --show-sdk-path`
+export RC_EMBEDDEDPROJECT_DIR=~
+
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
