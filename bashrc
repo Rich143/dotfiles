@@ -27,9 +27,6 @@ export SVN_EDITOR="vim"
 export EDITOR=vim
 export VISUAL="$EDITOR"
 
-export TERM="screen-256color"
-alias tmux="tmux -2"
-
 export PATH=$HOME/bin:$PATH
 
 # Less Colors for Man Pages

@@ -21,3 +21,5 @@ tags
 .vimrc
 cscope.*
 compile_commands.json
+
+*.patch

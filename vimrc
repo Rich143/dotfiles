@@ -103,6 +103,9 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'prabirshrestha/async.vim'
   Plug 'prabirshrestha/vim-lsp'
 
+Plug 'xolox/vim-session'
+  Plug 'xolox/vim-misc'
+
 "if has("gui_running")
   "if has('nvim')
     "Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -831,6 +834,9 @@ function! XCB_RunBuildCommand(cmd)
   endif
 endfunction
 
+
+" Use the system clipboard
+set clipboard=unnamed
 
 " Notes
 " gf - jump to file under cursor and <C-^> or <C-6> to return to previous
