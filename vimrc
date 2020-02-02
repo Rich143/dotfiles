@@ -81,10 +81,21 @@ Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 
 Plug 'idanarye/vim-vebugger'
 
+Plug 'tpope/vim-sleuth'
+
+Plug 'therubymug/vim-pyte'
+
+Plug 'MarcWeber/vim-addon-mw-utils'
+Plug 'tomtom/tlib_vim'
+Plug 'garbas/vim-snipmate'
+
+" Snippets are separated from the engine. Add this if you want them:
+Plug 'honza/vim-snippets'
+
 "Plug 'vim-scripts/cvsdiff.vim'
 
 ""https://github.com/vim-scripts/DoxygenToolkit.vim
-"Plug 'mrtazz/DoxygenToolkit.vim'
+Plug 'mrtazz/DoxygenToolkit.vim'
 
 "Plug 'alessandroyorba/despacio' alternate color scheme
 
@@ -168,7 +179,8 @@ set foldmethod=manual
 " nnoremap <space> za
 
 " Latex
-au BufNewFile,BufRead *.tex set tw=79
+"au BufNewFile,BufRead *.tex set tw=79
+au BufNewFile,BufRead *.tex set spell
 
 " Python indentation
 au BufNewFile,BufRead *.py call SetPythonOptions()
@@ -322,7 +334,7 @@ if !exists("autocommands_loaded")
    let autocommands_loaded = 1
    au FocusGained * :redraw!
    " Latex
-   au BufNewFile,BufRead *.tex set tw=79
+   "au BufNewFile,BufRead *.tex set tw=79
 
    " Python indentation
    au BufNewFile,BufRead *.py call SetPythonOptions()
@@ -433,6 +445,7 @@ let VCSCommandMapPrefix = '<Leader>z'
 "nnoremap <leader>up :call Update_Path()<CR>
 
 set path =.,,
+set path+=**
 
 "Completion
 set completeopt=longest,menuone "insert longest common match, and always turn on menu
@@ -554,6 +567,12 @@ function! s:RunShellCommand(cmdline)
   1
 endfunction
 nnoremap <leader>zo :Shell cvsrw<CR>
+
+"
+" Snippets
+"
+
+imap <C-s> <Plug>snipMateNextOrTrigger
 
 " Highlight the current line, use :match to remove highlight
 " alse sets mark l
