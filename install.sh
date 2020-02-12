@@ -1,4 +1,4 @@
-DOTS="vim vimrc"
+DOTS="vim vimrc tmux.conf"
 
 check_exists() {
     file=$1

@@ -120,7 +120,7 @@ nnoremap <Space> <Nop>
 let mapleader="\<space>"
 
 if has('mouse')
-   "set mouse=a
+   set mouse=a
 endif
 
 set number
