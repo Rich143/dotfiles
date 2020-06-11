@@ -1,4 +1,4 @@
-DOTS="vim vimrc tmux.conf"
+DOTS="vim vimrc tmux.conf zshrc gitconfig"
 
 check_exists() {
     file=$1

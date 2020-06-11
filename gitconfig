@@ -1,0 +1,11 @@
+[alias]
+    co = checkout
+    br = branch
+    pu = push
+    st = status
+    cm = commit
+    sm = submodule
+    me = merge
+    cp = cherry-pick
+    vis = "!f(){ gitk --all \"$@\" & disown; }; f"
+    diffl = diff --ignore-space-at-eol -b -w --ignore-blank-lines
