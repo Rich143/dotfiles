@@ -51,7 +51,7 @@ Plug 'yssl/QFEnter'
 " Potential slowdown of insert mode
 "Plug 'Yggdroot/indentLine'
 
-Plug 'ctrlpvim/ctrlp.vim'
+"Plug 'ctrlpvim/ctrlp.vim'
 
 Plug 'jlanzarotta/bufexplorer'
 
@@ -73,17 +73,18 @@ Plug 'octref/RootIgnore'
 
 "Plug 'djmoch/vim-makejob'
 
-Plug 'tpope/vim-dispatch'
+"Plug 'tpope/vim-dispatch'
 
 Plug 'itchyny/lightline.vim'
 
-Plug 'Shougo/vimproc.vim', {'do' : 'make'}
+"Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 
-Plug 'idanarye/vim-vebugger'
 
 Plug 'tpope/vim-sleuth'
 
-Plug 'therubymug/vim-pyte'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+
 
 Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'tomtom/tlib_vim'
@@ -91,6 +92,8 @@ Plug 'garbas/vim-snipmate'
 
 " Snippets are separated from the engine. Add this if you want them:
 Plug 'honza/vim-snippets'
+
+Plug 'tommcdo/vim-kangaroo'
 
 "Plug 'vim-scripts/cvsdiff.vim'
 
@@ -131,6 +134,7 @@ if !exists('set_syntax')
    syntax enable
    set background=dark
    let g:solarized_termtrans = 1
+   set guifont=Monaco:h12
    colorscheme solarized
 
    "set t_Co=256
@@ -252,9 +256,15 @@ let g:lightline = {
       \ 'colorscheme': 'solarized',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
-      \ },
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ],
+      \ 'right': [
+      \            [ 'lineinfo' ],
+      \            [ 'percent' ],
+      \            [ 'fileformat', 'fileencoding', 'filetype' ],
+      \            [ 'tags' ],
+      \            ] },
       \ 'component_function': {
+      \   'tags'        : 'gutentags#statusline',
       \   'gitbranch'   : 'fugitive#head',
       \   'filename'    : 'LightLineFilename',
       \   'fileformat'  : 'LightlineFileformat',
@@ -308,6 +318,13 @@ function! LightlineMode()
 endfunction
 set laststatus=2
 set noshowmode
+
+" Autorefresh gutentags status
+augroup MyGutentagsStatusLineRefresher
+    autocmd!
+    autocmd User GutentagsUpdating call lightline#update()
+    autocmd User GutentagsUpdated call lightline#update()
+augroup END
 "set statusline=
 "set statusline+=%1*[%n] " buffer number
 "" set statusline+=%2*\ %{expand('%:~:h')}\  " file path
@@ -323,7 +340,7 @@ set backspace=indent,eol,start
 
 
 " highlight column 79
-set cc=79
+set colorcolumn=79
 
 " search within visual selection
 vnoremap / <Esc>/\%><C-R>=line("'<")-1<CR>l\%<<C-R>=line("'>")+1<CR>l
@@ -358,7 +375,7 @@ com! DiffSaved call s:DiffWithSaved()
 "command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
        "\ | wincmd p | diffthis
 
-" toggle paste mode with F2
+" toggle paste mode with F12
 set pastetoggle=<F12>
 
 " use alt-] to open tag definition in new vertical split
@@ -407,8 +424,8 @@ if executable('ag')
 
    "     " Use ag in CtrlP for listing files. Lightning fast and respects
    "     .gitignore
-   let g:ctrlp_user_command = 'ag %s --ignore=*.[od] -l --nocolor -g ""'
-   let g:ackprg = 'ag --vimgrep'
+   let g:ctrlp_user_command = 'ag %s --path-to-ignore ~/.ag-ignore --ignore=*.[od] -l --nocolor -g ""'
+   let g:ackprg = 'ag --vimgrep --path-to-ignore ~/.ag-ignore'
 endif
 nnoremap <leader>ag :Ack <cword><cr>
 
@@ -417,6 +434,39 @@ let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:30,results:30'
 " default to filename mode
 let g:ctrlp_by_filename = 1
 let g:ctrlp_switch_buffer = 'et'
+
+" FZF
+" Customize fzf colors to match your color scheme
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
+"let g:fzf_colors =
+"\ { 'fg':      ['fg', 'Normal'],
+  "\ 'bg':      ['bg', 'Normal'],
+  "\ 'hl':      ['fg', 'Comment'],
+  "\ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  "\ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  "\ 'hl+':     ['fg', 'Statement'],
+  "\ 'info':    ['fg', 'PreProc'],
+  "\ 'border':  ['fg', 'Ignore'],
+  "\ 'prompt':  ['fg', 'Conditional'],
+  "\ 'pointer': ['fg', 'Exception'],
+  "\ 'marker':  ['fg', 'Keyword'],
+  "\ 'spinner': ['fg', 'Label'],
+  "\ 'header':  ['fg', 'Comment'] }
+nnoremap <leader>p :Files<CR>
+"command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
+imap <c-x><c-f> <plug>(fzf-complete-file-ag)
 
 
 
@@ -584,6 +634,9 @@ set nocursorbind
 if v:version > 703 || v:version == 703 && has('patch541')
   set formatoptions+=j
 endif
+" Use the system clipboard
+set clipboard=unnamed
+
 " Notes
 " gf - jump to file under cursor and <C-^> or <C-6> to return to previous
 " buffer

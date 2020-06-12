@@ -1,4 +1,4 @@
-DOTS="vim vimrc tmux.conf zshrc gitconfig"
+DOTS="vim vimrc tmux.conf zshrc gitconfig ag-ignore"
 
 check_exists() {
     file=$1
