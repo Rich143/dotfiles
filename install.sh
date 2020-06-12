@@ -33,7 +33,16 @@ link_file() {
     ln -s $src $dst
 }
 
+install_zinit() {
+    ZINIT_DIRECTORY=~/.zinit
+    if [ ! -d "$ZINIT_DIRECTORY" ]; then
+        sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh)"
+    fi
+}
+
 main() {
+    install_zinit
+
     for file in $DOTS; do
         dst="$HOME/.$file"
         src=$PWD/$file
