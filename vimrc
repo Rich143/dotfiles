@@ -236,7 +236,8 @@ nnoremap <leader>nf :NERDTreeFind<CR>
 
 "guten-tags
 let g:gutentags_project_root=['.svn']
-
+let g:gutentags_define_advanced_commands=1
+let g:gutentags_trace=1
 
 " resize
 nnoremap <leader>- :resize -5<CR>

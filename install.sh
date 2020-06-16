@@ -1,4 +1,4 @@
-DOTS="vim vimrc tmux.conf zshrc gitconfig ag-ignore"
+DOTS="vim vimrc tmux.conf zshrc gitconfig ag-ignore ctags"
 
 check_exists() {
     file=$1
@@ -19,7 +19,7 @@ check_exists() {
                 echo "mv $file $file.bak"
                 mv $file $file.bak
             else
-                exit 1
+                return 1
             fi
         fi
     fi
@@ -49,7 +49,10 @@ main() {
 
         echo "checking: $dst"
         check_exists $dst
-        link_file $src $dst
+        local res=$?
+        if [ $res -ne 0 ]; then
+            link_file $src $dst
+        fi
     done
 }
 
