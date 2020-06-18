@@ -100,6 +100,9 @@ Plug 'tommcdo/vim-kangaroo'
 ""https://github.com/vim-scripts/DoxygenToolkit.vim
 Plug 'mrtazz/DoxygenToolkit.vim'
 
+" VIM LSP Client
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
 "Plug 'alessandroyorba/despacio' alternate color scheme
 
 "Plug 'arnar/vim-matchopen'
@@ -237,7 +240,7 @@ nnoremap <leader>nf :NERDTreeFind<CR>
 "guten-tags
 let g:gutentags_project_root=['.svn']
 let g:gutentags_define_advanced_commands=1
-let g:gutentags_trace=1
+"let g:gutentags_trace=1
 
 " resize
 nnoremap <leader>- :resize -5<CR>
@@ -257,7 +260,7 @@ let g:lightline = {
       \ 'colorscheme': 'solarized',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ],
+      \             [ 'cocstatus', 'gitbranch', 'readonly', 'filename', 'modified' ] ],
       \ 'right': [
       \            [ 'lineinfo' ],
       \            [ 'percent' ],
@@ -326,6 +329,9 @@ augroup MyGutentagsStatusLineRefresher
     autocmd User GutentagsUpdating call lightline#update()
     autocmd User GutentagsUpdated call lightline#update()
 augroup END
+
+autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
+
 "set statusline=
 "set statusline+=%1*[%n] " buffer number
 "" set statusline+=%2*\ %{expand('%:~:h')}\  " file path
@@ -333,7 +339,7 @@ augroup END
 "set statusline+=%3*%t " file name
 "set statusline+=%2*%m " file name
 "" set statusline+=%=%{ObsessionStatus('Session','No-Session')}\ %{gutentags#statusline()}
-"set statusline+=%=%4*[%l/%L]\ 
+"set statusline+=%=%4*[%l/%L]\
 ""set statusline+=%{gutentags#statusline()}
 
 " fix backspace
@@ -637,6 +643,111 @@ if v:version > 703 || v:version == 703 && has('patch541')
 endif
 " Use the system clipboard
 set clipboard=unnamed
+
+""
+" Coc.nvim
+""
+let g:coc_global_extensions = [ 'coc-json', 'coc-python', 'coc-clangd' ]
+
+" TextEdit might fail if hidden is not set.
+set hidden
+
+" Some servers have issues with backup files, see #649.
+set nobackup
+set nowritebackup
+
+" Give more space for displaying messages.
+set cmdheight=2
+
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=300
+
+" Don't pass messages to |ins-completion-menu|.
+set shortmess+=c
+
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+if has("patch-8.1.1564")
+  " Recently vim can merge signcolumn and number column into one
+  set signcolumn=number
+else
+  set signcolumn=yes
+endif
+
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
+" position. Coc only does snippet and additional edit on confirm.
+" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
+if exists('*complete_info')
+  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+else
+  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+endif
+
+" Use `[g` and `]g` to navigate diagnostics
+" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>KangarooPush<Plug>(coc-definition)
+nmap <silent> gy <Plug>KangarooPush<Plug>(coc-type-definition)
+nmap <silent> gi <Plug>KangarooPush<Plug>(coc-implementation)
+nmap <silent> gr <Plug>KangarooPush<Plug>(coc-references)
+nmap <silent> gb <Plug>KangarooPop
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
+
+" Formatting selected code.
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder.
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+
+"" Applying codeAction to the selected region.
+"" Example: `<leader>aap` for current paragraph
+"xmap <leader>a  <Plug>(coc-codeaction-selected)
+"nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+"" Remap keys for applying codeAction to the current buffer.
+"nmap <leader>ac  <Plug>(coc-codeaction)
+" Apply AutoFix to problem on the current line.
+nmap <leader>qf  <Plug>(coc-fix-current)
 
 " Notes
 " gf - jump to file under cursor and <C-^> or <C-6> to return to previous

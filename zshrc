@@ -148,3 +148,5 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#2aa198,bg=#002b36,underline"
 zinit light "skywind3000/z.lua"
 
 zinit light zdharma/fast-syntax-highlighting
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
