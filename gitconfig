@@ -12,3 +12,5 @@
 [user]
 	name = Richard Matthews
 	email = richard_matthews@apple.com
+[core]
+	excludesfile = ~/.gitignore

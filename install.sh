@@ -1,4 +1,4 @@
-DOTS="vim vimrc tmux.conf zshrc gitconfig ag-ignore ctags"
+DOTS="vim vimrc tmux.conf zshrc gitconfig ag-ignore ctags gitignore hammerspoon"
 
 check_exists() {
     file=$1
@@ -53,7 +53,8 @@ install_homebrew_packages() {
     if brew ls --versions universal-ctags > /dev/null; then
         echo "universal-ctags installed already"
     else
-        brew install universal-ctags
+        brew tap universal-ctags/universal-ctags
+        brew install --with-jansson --HEAD universal-ctags/universal-ctags/universal-ctags
     fi
 
     if brew ls --versions macvim > /dev/null; then
@@ -74,11 +75,25 @@ install_homebrew_packages() {
         brew install llvm && echo  "llvm installed, to setup clangd, symlink clangd into your path"
     fi
 
-    if brew ls --versions hammerspoon > /dev/null; then
+    if [ -d ~/.hammerspoon ]; then
         echo "hammerspoon installed already"
     else
-        brew cask install hammerspoon && echo "Hammerspoon installed, follow the following docs to install shiftit spoon"
+        brew cask install hammerspoon
     fi
+
+    if brew ls --versions pyenv > /dev/null; then
+        echo "pyenv installed already"
+    else
+        brew install pyenv
+    fi
+
+    if brew ls --versions pyenv > /dev/null; then
+        echo "fira-mono nerf font installed already"
+    else
+        brew tap homebrew/cask-fonts
+        brew install font-fira-mono-nerd-font
+    fi
+
 }
 
 install_zinit() {

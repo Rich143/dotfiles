@@ -26,7 +26,13 @@ Plug 'ludovicchabant/vim-gutentags'
 
 Plug 'scrooloose/nerdcommenter'
 
-Plug 'vim-scripts/taglist.vim'
+" Tag bar functionallity
+" Old
+"Plug 'vim-scripts/taglist.vim'
+" More recent
+Plug 'majutsushi/tagbar'
+" LSP support
+"Plug 'liuchengxu/vista.vim'
 
 Plug 'vim-scripts/TaskList.vim'
 
@@ -67,9 +73,9 @@ Plug 'tpope/vim-fugitive'
 
 "Plug 'vim-scripts/Conque-GDB'
 
-Plug 'ajh17/VimCompletesMe'
+"Plug 'ajh17/VimCompletesMe'
 
-Plug 'octref/RootIgnore'
+"Plug 'octref/RootIgnore'
 
 "Plug 'djmoch/vim-makejob'
 
@@ -102,6 +108,12 @@ Plug 'mrtazz/DoxygenToolkit.vim'
 
 " VIM LSP Client
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" Python formatting
+Plug 'Vimjas/vim-python-pep8-indent'
+
+" Insert or delete brackets, parens, quotes in pair.
+Plug 'jiangmiao/auto-pairs'
 
 "Plug 'alessandroyorba/despacio' alternate color scheme
 
@@ -137,7 +149,8 @@ if !exists('set_syntax')
    syntax enable
    set background=dark
    let g:solarized_termtrans = 1
-   set guifont=Monaco:h12
+   "set guifont=Monaco:h12
+   set guifont=FiraMono\ Nerd\ Font\ Mono:h12
    colorscheme solarized
 
    "set t_Co=256
@@ -364,8 +377,18 @@ if !exists("autocommands_loaded")
    au BufNewFile,BufRead *.py call SetPythonOptions()
 endif
 
+"TagList/Tagbar/Vista
 "TagList
-nnoremap <leader>t :TlistToggle<CR>
+"nnoremap <leader>t :TlistToggle<CR>
+" Vista
+"nnoremap <leader>t :Vista coc<CR>
+"nnoremap <leader>t :Vista!!<CR>
+"let g:vista_sidebard_position="vertical topleft"
+"let g:vista_stay_on_open=0
+"let g:vista_default_executive="coc"
+" Tagbar
+nnoremap <leader>t :TagbarToggle<CR>
+
 
 " TaskList (TODO)
 nnoremap <leader>d <Plug>TaskList
@@ -446,7 +469,8 @@ let g:ctrlp_switch_buffer = 'et'
 " Customize fzf colors to match your color scheme
 let g:fzf_colors =
 \ { 'fg':      ['fg', 'Normal'],
-  \ 'hl':      ['fg', 'Comment'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Normal'],
   \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
   \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
   \ 'hl+':     ['fg', 'Statement'],
@@ -748,6 +772,8 @@ augroup end
 "nmap <leader>ac  <Plug>(coc-codeaction)
 " Apply AutoFix to problem on the current line.
 nmap <leader>qf  <Plug>(coc-fix-current)
+
+set undodir=~/.vim/undodir
 
 " Notes
 " gf - jump to file under cursor and <C-^> or <C-6> to return to previous

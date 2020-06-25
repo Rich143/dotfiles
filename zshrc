@@ -12,6 +12,13 @@ ZSH_THEME="agnoster"
 
 ZSH_DISABLE_COMPFIX=true
 
+#
+# Python
+#
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+fi
+
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
 # a theme from this variable instead of looking in $ZSH/themes/
