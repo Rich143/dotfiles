@@ -1,5 +1,7 @@
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:/usr/local/bin:$PATH
+#export PATH=/Applications/ARM/bin:$PATH
+export PATH=~/Tools/gcc-arm-none-eabi-8-2018-q4-major/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/richardmatthews/.oh-my-zsh"
@@ -18,6 +20,9 @@ ZSH_DISABLE_COMPFIX=true
 if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
 fi
+
+# poetry
+export PATH="$HOME/.poetry/bin:$PATH"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -77,7 +82,7 @@ fi
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(git poetry)
 
 source $ZSH/oh-my-zsh.sh
 

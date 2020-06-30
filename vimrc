@@ -150,7 +150,7 @@ if !exists('set_syntax')
    set background=dark
    let g:solarized_termtrans = 1
    "set guifont=Monaco:h12
-   set guifont=FiraMono\ Nerd\ Font\ Mono:h12
+   set guifont=FiraMono\ Nerd\ Font\ Mono:h13
    colorscheme solarized
 
    "set t_Co=256
@@ -388,6 +388,7 @@ endif
 "let g:vista_default_executive="coc"
 " Tagbar
 nnoremap <leader>t :TagbarToggle<CR>
+let g:tagbar_sort = 0
 
 
 " TaskList (TODO)
