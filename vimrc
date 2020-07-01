@@ -109,11 +109,15 @@ Plug 'mrtazz/DoxygenToolkit.vim'
 " VIM LSP Client
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
+" C/C++ LSP syntax highlighting
+Plug 'jackguo380/vim-lsp-cxx-highlight'
+
 " Python formatting
 Plug 'Vimjas/vim-python-pep8-indent'
 
 " Insert or delete brackets, parens, quotes in pair.
 Plug 'jiangmiao/auto-pairs'
+
 
 "Plug 'alessandroyorba/despacio' alternate color scheme
 
@@ -540,7 +544,65 @@ set wildignore=*.o,*.bin,*.elf,*.obj
 set wildmode=longest:full,full
 
 " swtich to header file
-nnoremap <leader>a :find %:t:r.
+"nnoremap <leader>a :find %:t:r.
+nnoremap <leader>j :edit <C-R>=GetHeaderSourceFile()<CR><CR>
+
+function! GetHeaderSourceFile()
+    let cur_file = expand('%:t:r')
+    let cur_file_extension = expand('%:e')
+    let cur_dir = getcwd()
+python3 << endpython
+import vim
+import subprocess
+
+header_extensions = ['hpp', 'h']
+source_extensions = ['c', 'cpp']
+
+curFileExtension = vim.eval('cur_file_extension')
+
+if curFileExtension in source_extensions:
+    extensions = header_extensions
+else:
+    extensions = source_extensions
+
+cwd = vim.eval('cur_dir')
+file = vim.eval('cur_file')
+
+found = False
+
+for extension in extensions:
+    command = ['find', '{cwd}'.format(cwd=cwd),
+    '-name',
+    '{file}.{extension}'.format( file=file, extension=extension)
+    ]
+    print(command)
+    try:
+        output = subprocess.check_output(command, shell=False, universal_newlines=True)
+        foundFile = output.partition('\n')[0]
+        foundFile = foundFile.rstrip()
+    except subprocess.CalledProcessError as e:
+        print(e.output)
+        continue
+    if not foundFile:
+        print("Found no file")
+        continue
+    else:
+        print("Found {}".format(foundFile))
+        found = True
+        vim.command('let header_source_file = "{}"'.format(foundFile))
+        break
+
+if not found:
+    vim.command('let header_source_file = ""')
+endpython
+
+    if header_source_file == ""
+        echoerr "Couldn't find file"
+        return expand('%')
+    else
+        return header_source_file
+    endif
+endfunction
 
 
 nnoremap <leader>zo :new<CR>:setlocal buftype=nofile<CR>:read !svn status<CR>
@@ -735,6 +797,9 @@ nmap <silent> gi <Plug>KangarooPush<Plug>(coc-implementation)
 nmap <silent> gr <Plug>KangarooPush<Plug>(coc-references)
 nmap <silent> gb <Plug>KangarooPop
 
+" Not through Coc.nvim
+nmap gp <Plug>KangarooPush*:edit <C-R>=GetHeaderSourceFile()<CR><CR>n:noh<CR>zz
+
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
@@ -775,6 +840,10 @@ augroup end
 nmap <leader>qf  <Plug>(coc-fix-current)
 
 set undodir=~/.vim/undodir
+
+
+" LSP CXX Highlight
+hi LspCxxHlGroupMemberVariable ctermfg=Magenta guifg=#d33682
 
 " Notes
 " gf - jump to file under cursor and <C-^> or <C-6> to return to previous

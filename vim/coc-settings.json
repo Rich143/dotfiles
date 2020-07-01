@@ -1,4 +1,5 @@
 {
-    "coc.preferences.rootPatterns": [".git",".hg",".projections.json", "compile_commands.json", "compile_commands.txt"],
-   "clangd.arguments": ["--background-index"]
+   "coc.preferences.rootPatterns": [".git",".hg",".projections.json", "compile_commands.json", "compile_commands.txt"],
+   "clangd.arguments": ["--background-index"],
+   "clangd.semanticHighlighting": true
 }
