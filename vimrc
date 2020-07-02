@@ -457,10 +457,8 @@ if executable('ag')
    " Use Ag over Grep
    set grepprg=ag\ --nogroup\ --nocolor
 
-   "     " Use ag in CtrlP for listing files. Lightning fast and respects
-   "     .gitignore
-   let g:ctrlp_user_command = 'ag %s --path-to-ignore ~/.ag-ignore --ignore=*.[od] -l --nocolor -g ""'
    let g:ackprg = 'ag --vimgrep --path-to-ignore ~/.ag-ignore'
+   let $FZF_DEFAULT_COMMAND = 'ag --path-to-ignore ~/.ag-ignore -g ""'
 endif
 nnoremap <leader>ag :Ack <cword><cr>
 
@@ -472,20 +470,24 @@ let g:ctrlp_switch_buffer = 'et'
 
 " FZF
 " Customize fzf colors to match your color scheme
-let g:fzf_colors =
-\ { 'fg':      ['fg', 'Normal'],
-  \ 'bg':      ['bg', 'Normal'],
-  \ 'hl':      ['fg', 'Normal'],
-  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-  \ 'hl+':     ['fg', 'Statement'],
-  \ 'info':    ['fg', 'PreProc'],
-  \ 'border':  ['fg', 'Ignore'],
-  \ 'prompt':  ['fg', 'Conditional'],
-  \ 'pointer': ['fg', 'Exception'],
-  \ 'marker':  ['fg', 'Keyword'],
-  \ 'spinner': ['fg', 'Label'],
-  \ 'header':  ['fg', 'Comment'] }
+let g:fzf_colors = {}
+"let g:fzf_colors = {
+            "\ 'fg': ['fg', 'Normal', 'Comment', 'CursorLine'],
+            "\ }
+"let g:fzf_colors =
+"\ { 'fg':      ['fg', '#af005f', 'Magenta'],
+  "\ 'bg':      ['bg', 'Magenta'],
+  "\ 'hl':      ['fg', 'Normal'],
+  "\ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  "\ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  "\ 'hl+':     ['fg', 'Statement'],
+  "\ 'info':    ['fg', 'PreProc'],
+  "\ 'border':  ['fg', 'Ignore'],
+  "\ 'prompt':  ['fg', 'Conditional'],
+  "\ 'pointer': ['fg', 'Exception'],
+  "\ 'marker':  ['fg', 'Keyword'],
+  "\ 'spinner': ['fg', 'Label'],
+  "\ 'header':  ['fg', 'Comment'] }
 "let g:fzf_colors =
 "\ { 'fg':      ['fg', 'Normal'],
   "\ 'bg':      ['bg', 'Normal'],
@@ -500,7 +502,7 @@ let g:fzf_colors =
   "\ 'marker':  ['fg', 'Keyword'],
   "\ 'spinner': ['fg', 'Label'],
   "\ 'header':  ['fg', 'Comment'] }
-nnoremap <leader>p :Files<CR>
+nnoremap <leader>p :GFiles --cached --others --exclude-standard<cr>
 "command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
 imap <c-x><c-f> <plug>(fzf-complete-file-ag)
 

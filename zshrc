@@ -161,7 +161,9 @@ zinit light "skywind3000/z.lua"
 
 zinit light zdharma/fast-syntax-highlighting
 
+# FZF
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_DEFAULT_COMMAND='ag --path-to-ignore ~/.ag-ignore -g ""'
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
