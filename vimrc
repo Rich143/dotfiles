@@ -609,6 +609,7 @@ nnoremap <leader>zo :new<CR>:setlocal buftype=nofile<CR>:read !svn status<CR>
 
 nnoremap <leader>tn :tabnew<CR>
 nnoremap <leader>ts :tab split<CR>
+nnoremap <leader>tc :tabclose<CR>
 
 " diff all opened windows then close diffs
 nnoremap <leader>md :windo diffthis<CR>
