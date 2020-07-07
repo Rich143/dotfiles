@@ -167,3 +167,4 @@ export FZF_DEFAULT_COMMAND='ag --path-to-ignore ~/.ag-ignore -g ""'
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
+PATH=~/.xclink/bin:$PATH

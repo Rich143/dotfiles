@@ -1,4 +1,5 @@
 DOTS="vim vimrc tmux.conf zshrc gitconfig ag-ignore ctags gitignore hammerspoon"
+NON_DOTS="bin"
 
 check_exists() {
     file=$1
@@ -63,12 +64,6 @@ install_homebrew_packages() {
         brew install macvim
     fi
 
-    if brew ls --versions bear > /dev/null; then
-        echo "bear installed already"
-    else
-        brew install bear
-    fi
-
     if brew ls --versions llvm > /dev/null; then
         echo "llvm installed already"
     else
@@ -94,6 +89,11 @@ install_homebrew_packages() {
         brew install font-fira-mono-nerd-font
     fi
 
+    if brew ls --versions speedtest_cli > /dev/null; then
+        echo "speedtest_cli installed already"
+    else
+        brew install speedtest_cli
+    fi
 }
 
 install_zinit() {
@@ -121,6 +121,18 @@ main() {
 
     for file in $DOTS; do
         dst="$HOME/.$file"
+        src=$PWD/$file
+
+        echo "checking: $dst"
+        check_exists $dst
+        local res=$?
+        if [ $res -eq 0 ]; then
+            link_file $src $dst
+        fi
+    done
+
+    for file in $NON_DOTS; do
+        dst="$HOME/$file"
         src=$PWD/$file
 
         echo "checking: $dst"

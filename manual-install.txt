@@ -1,3 +1,9 @@
 Things to manually install (for now)
-homebrew
-universal-ctags (https://github.com/universal-ctags/ctags)
+python (https://opensource.com/article/20/4/pyenv)(https://medium.com/@briantorresgil/definitive-guide-to-python-on-mac-osx-65acd8d969d0)
+compiledb (https://github.com/nickdiego/compiledb)
+
+For python coc-python:
+    in the virtual env, intall:
+        pylint (or other linter)
+        jedi
+
