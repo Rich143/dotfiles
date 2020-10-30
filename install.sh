@@ -94,6 +94,19 @@ install_homebrew_packages() {
     else
         brew install speedtest_cli
     fi
+
+    if brew ls --versions pipx > /dev/null; then
+        echo "pipx installed already"
+    else
+        brew install pipx
+        pipx ensurepath
+    fi
+
+    if brew ls --versions doxygen > /dev/null; then
+        echo "doxygen installed already"
+    else
+        brew install doxygen
+    fi
 }
 
 install_zinit() {

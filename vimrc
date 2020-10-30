@@ -92,9 +92,9 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
 
-Plug 'MarcWeber/vim-addon-mw-utils'
-Plug 'tomtom/tlib_vim'
-Plug 'garbas/vim-snipmate'
+"Plug 'MarcWeber/vim-addon-mw-utils'
+"Plug 'tomtom/tlib_vim'
+"Plug 'garbas/vim-snipmate'
 
 " Snippets are separated from the engine. Add this if you want them:
 Plug 'honza/vim-snippets'
@@ -128,6 +128,10 @@ Plug 'jiangmiao/auto-pairs'
 
 " Plug 'vim-scripts/cscope.vim'
 
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+
+Plug 'martinda/Jenkinsfile-vim-syntax'
+
 " All of your Plugins must be added before the following line
 call plug#end()            " required
 
@@ -151,7 +155,7 @@ nnoremap <C-n> <C-I>
 
 if !exists('set_syntax')
    syntax enable
-   set background=dark
+   set background=light
    let g:solarized_termtrans = 1
    "set guifont=Monaco:h12
    set guifont=FiraMono\ Nerd\ Font\ Mono:h13
@@ -200,14 +204,18 @@ set nofoldenable
 set foldlevel=0
 set foldmethod=manual
 
-" nnoremap <space> za
-
-" Latex
-"au BufNewFile,BufRead *.tex set tw=79
-au BufNewFile,BufRead *.tex set spell
-
-" Python indentation
-au BufNewFile,BufRead *.py call SetPythonOptions()
+"
+" File autocmds
+"
+augroup FileAutoCommandsGroup
+    autocmd!
+    " Latex
+    autocmd BufNewFile,BufRead *.tex set spell
+    " Makefile indentation
+    autocmd BufNewFile,BufRead Makefile,*.mk call SetMakefileOptions()
+    " Python indentation
+    autocmd BufNewFile,BufRead *.py call SetPythonOptions()
+augroup end
 
 function! SetPythonOptions()
        set tabstop=4
@@ -221,6 +229,17 @@ function! SetPythonOptions()
        set fileformat=unix
        set encoding=utf-8
 endfunction
+
+
+function! SetMakefileOptions()
+  let b:sleuth_automatic = 0
+  set list
+  set listchars=tab:␉·
+  set noexpandtab
+  set shiftwidth=4
+  set smarttab
+endfunction
+
 
 
 vnoremap < <gv
@@ -259,11 +278,21 @@ let g:gutentags_project_root=['.svn']
 let g:gutentags_define_advanced_commands=1
 "let g:gutentags_trace=1
 
+" Splits
+"
 " resize
-nnoremap <leader>- :resize -5<CR>
-nnoremap <leader>= :resize +5<CR>
+"nnoremap <leader>- :resize -5<CR>
+"nnoremap <leader>= :resize +5<CR>
 nnoremap <leader>, :vertical resize -5<CR>
 nnoremap <leader>. :vertical resize +5<CR>
+nnoremap <leader>= <C-W>=
+
+" new splits right and below
+set splitright
+set splitbelow
+
+" Equalize splits on create
+set equalalways
 
 hi User1 ctermbg=0 ctermfg=3
 hi User2 ctermbg=0 ctermfg=3
@@ -320,34 +349,33 @@ function! LightLineFilename()
   return fnamemodify(expand("%"), ":~:.")
 endfunction
 function! LightlineFileformat()
-    return winwidth(0) > 90 ? &fileformat : ''
+    return winwidth(0) > 80 ? &fileformat : ''
 endfunction
 
 function! LightlineFiletype()
-    return winwidth(0) > 90 ? (&filetype !=# '' ? &filetype : 'no ft') : ''
+    return winwidth(0) > 70 ? (&filetype !=# '' ? &filetype : 'no ft') : ''
 endfunction
 
 function! LightlineFileencoding()
-    return winwidth(0) > 90 ? (&fenc !=# '' ? &fenc : &enc) : ''
+    return winwidth(0) > 80 ? (&fenc !=# '' ? &fenc : &enc) : ''
 endfunction
 function! LightlineMode()
     let fname = expand('%:t')
     return fname == '__Tagbar__' ? 'Tagbar' :
                 \ fname == 'ControlP' ? 'CtrlP' :
                 \ fname =~ 'NERD_tree' ? 'NERDTree' :
-                \ winwidth(0) > 90 ? lightline#mode() : ''
+                \ winwidth(0) > 50 ? lightline#mode() : ''
 endfunction
 set laststatus=2
 set noshowmode
 
 " Autorefresh gutentags status
-augroup MyGutentagsStatusLineRefresher
+augroup LightlineUpdateAutocmds
     autocmd!
     autocmd User GutentagsUpdating call lightline#update()
     autocmd User GutentagsUpdated call lightline#update()
+    autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
 augroup END
-
-autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
 
 "set statusline=
 "set statusline+=%1*[%n] " buffer number
@@ -373,12 +401,7 @@ vnoremap ? <Esc>?\%><C-R>=line("'<")-1<CR>l\%<<C-R>=line("'>")+1<CR>l
 nnoremap <leader>r :redraw!<CR>
 if !exists("autocommands_loaded")
    let autocommands_loaded = 1
-   au FocusGained * :redraw!
-   " Latex
-   "au BufNewFile,BufRead *.tex set tw=79
-
-   " Python indentation
-   au BufNewFile,BufRead *.py call SetPythonOptions()
+   autocmd FocusGained * :redraw!
 endif
 
 "TagList/Tagbar/Vista
@@ -403,7 +426,7 @@ function! s:DiffWithSaved()
    diffthis
    vnew | r # | normal! 1Gdd
    diffthis
-   exe setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
+   exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
 endfunction
 com! DiffSaved call s:DiffWithSaved()
 
@@ -416,13 +439,15 @@ set pastetoggle=<F12>
 " use alt-] to open tag definition in new vertical split
 map <A-]> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
 
-" new splits right and below
-set splitright
-set splitbelow
-
 " navigate quickfix list
 nnoremap cn <esc>:cn<CR>
 nnoremap cp <esc>:cp<CR>
+
+" navigate location list
+" Can't use l as this slows down using l to move cursor
+" come up with another mapping
+"nnoremap ln <esc>:lnext<CR>
+"nnoremap lp <esc>:lprevious<CR>
 
 " whitespace
 nnoremap <leader>w :StripWhitespace<CR>
@@ -667,33 +692,6 @@ let g:load_doxygen_syntax=1
 let g:qfenter_keymap = {}
 let g:qfenter_keymap.vopen = ['s']
 
-"quick scope
-nnoremap <leader>qst :QuickScopeToggle<CR>
-
-"cvsedit for vim
-function! Edit()
-    execute( 'silent !chmod u+w %' )
-    set noreadonly
-endfunction
-function! NoEdit()
-    execute( 'silent !chmod u+w %' )
-    set noreadonly
-endfunction
-nnoremap <leader>sw :call Edit()<CR>
-"nnoremap <leader>sw :!chmod u+w %<CR><CR>:set noreadonly<CR>
-nnoremap <leader>snw :call NoEdit()<CR>
-"nnoremap <leader>snw :!chmod u-w %<CR><CR>:set readonly<CR>
-
-"cscope in quickfix
-nnoremap <leader>sq :set cscopequickfix=s-,c-,d-,i-,t-,e-<CR>
-nnoremap <leader>snq :set cscopequickfix=<CR>
-
-" cvsdiff
-"nnoremap <leader>vd <Plug>Cvsdiffv
-
-" vim completes me
-"let g:vcm_direction = 'p'
-
 command! -complete=shellcmd -nargs=+ Shell call s:RunShellCommand(<q-args>)
 function! s:RunShellCommand(cmdline)
   echo a:cmdline
@@ -718,7 +716,8 @@ nnoremap <leader>zo :Shell cvsrw<CR>
 "
 " Snippets
 "
-
+" Coc.nvim uses <C-j> instead
+"
 imap <C-s> <Plug>snipMateNextOrTrigger
 
 " Highlight the current line, use :match to remove highlight
@@ -799,6 +798,7 @@ nmap <silent> gy <Plug>KangarooPush<Plug>(coc-type-definition)
 nmap <silent> gi <Plug>KangarooPush<Plug>(coc-implementation)
 nmap <silent> gr <Plug>KangarooPush<Plug>(coc-references)
 nmap <silent> gb <Plug>KangarooPop
+nmap          gf <Plug>KangarooPush:e <cfile><CR>
 
 " Not through Coc.nvim
 nmap gp <Plug>KangarooPush*:edit <C-R>=GetHeaderSourceFile()<CR><CR>n:noh<CR>zz
@@ -814,8 +814,6 @@ function! s:show_documentation()
   endif
 endfunction
 
-" Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
@@ -824,8 +822,10 @@ nmap <leader>rn <Plug>(coc-rename)
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
 
-augroup mygroup
+augroup MyCocAutoCmdGroup
   autocmd!
+  " Highlight the symbol and its references when holding the cursor.
+  autocmd CursorHold * silent call CocActionAsync('highlight')
   " Setup formatexpr specified filetype(s).
   autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
   " Update signature help on jump placeholder.
@@ -848,6 +848,11 @@ set undodir=~/.vim/undodir
 " LSP CXX Highlight
 hi LspCxxHlGroupMemberVariable ctermfg=Magenta guifg=#d33682
 
+set spell
+
+set belloff=all
+
+set makeprg=/Users/richardmatthews/bin/make-strip-xcode-warning
 " Notes
 " gf - jump to file under cursor and <C-^> or <C-6> to return to previous
 " buffer

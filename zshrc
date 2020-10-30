@@ -1,11 +1,15 @@
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 #export PATH=/Applications/ARM/bin:$PATH
-export PATH=~/Tools/gcc-arm-none-eabi-8-2018-q4-major/bin:$PATH
+export PATH=~/Tools/gcc-arm-none-eabi-7-2017-q4-major/bin:$PATH
+export PATH=$PATH:/Applications/SEGGER/JLink
+export PATH=$PATH:~/Apple-Work-Documents/C99/Tools
 
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/richardmatthews/.oh-my-zsh"
 
+
+SOLARIZED_THEME="light"
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
@@ -23,6 +27,8 @@ fi
 
 # poetry
 export PATH="$HOME/.poetry/bin:$PATH"
+
+[[ -d /opt/brew/share/zsh/site-functions/ ]] && fpath+=(/opt/brew/share/zsh/site-functions/)
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -112,11 +118,16 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias gits="git status"
+alias make="$HOME/bin/make-strip-xcode-warning"
 
 # Hide hostname when not ssh'd
 prompt_context() {
+  case ${SOLARIZED_THEME:-dark} in
+    light) CURRENT_FG='white';;
+    *)     CURRENT_FG='black';;
+  esac
   if [[ "$USER" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-    prompt_segment black default "%(!.%{%F{yellow}%}.)$USER"
+    prompt_segment $CURRENT_FG default "%(!.%{%F{yellow}%}.)$USER"
   fi
 }
 
@@ -167,4 +178,64 @@ export FZF_DEFAULT_COMMAND='ag --path-to-ignore ~/.ag-ignore -g ""'
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
+# Apple internal XCLink App
 PATH=~/.xclink/bin:$PATH
+
+# Allow using vim to edit current command
+autoload edit-command-line; zle -N edit-command-line
+bindkey -M vicmd ' ' edit-command-line
+
+# Created by `userpath` on 2020-07-14 15:12:48
+export PATH="$PATH:/Users/richardmatthews/.local/bin"
+
+# pipx
+autoload -U bashcompinit
+bashcompinit
+eval "$(register-python-argcomplete pipx)"
+
+# auto enable python virtual environments
+export WORKON_HOME=$HOME/.virtualenvs
+source $HOME/.pyenv/versions/3.8.3/bin/virtualenvwrapper.sh
+function _python-workon-cwd() {
+  # Check if this is a Git repo
+  local GIT_REPO_ROOT=""
+  local GIT_TOPLEVEL="$(git rev-parse --show-toplevel 2> /dev/null)"
+  if [[ $? == 0 ]]; then
+    GIT_REPO_ROOT="$GIT_TOPLEVEL"
+  fi
+  # Get absolute path, resolving symlinks
+  local PROJECT_ROOT="${PWD:A}"
+  while [[ "$PROJECT_ROOT" != "/" && ! -e "$PROJECT_ROOT/.venv" \
+            && ! -d "$PROJECT_ROOT/.git"  && "$PROJECT_ROOT" != "$GIT_REPO_ROOT" ]]; do
+    PROJECT_ROOT="${PROJECT_ROOT:h}"
+  done
+  if [[ "$PROJECT_ROOT" == "/" ]]; then
+    PROJECT_ROOT="."
+  fi
+  # Check for virtualenv name override
+  local ENV_NAME=""
+  if [[ -f "$PROJECT_ROOT/.venv" ]]; then
+    ENV_NAME="$(cat "$PROJECT_ROOT/.venv")"
+  elif [[ -f "$PROJECT_ROOT/.venv/bin/activate" ]];then
+    ENV_NAME="$PROJECT_ROOT/.venv"
+  elif [[ "$PROJECT_ROOT" != "." ]]; then
+    ENV_NAME="${PROJECT_ROOT:t}"
+  fi
+  if [[ -n $CD_VIRTUAL_ENV && "$ENV_NAME" != "$CD_VIRTUAL_ENV" ]]; then
+    # We've just left the repo, deactivate the environment
+    # Note: this only happens if the virtualenv was activated automatically
+    deactivate && unset CD_VIRTUAL_ENV
+  fi
+  if [[ "$ENV_NAME" != "" ]]; then
+    # Activate the environment only if it is not already active
+    if [[ "$VIRTUAL_ENV" != "$ENV_NAME" ]]; then
+      #echo "Activating virtual env"
+      if [[ -e "$ENV_NAME/bin/activate" ]]; then
+        source $ENV_NAME/bin/activate && export CD_VIRTUAL_ENV="$ENV_NAME"
+      elif [[ -e "$WORKON_HOME/$ENV_NAME/bin/activate" ]]; then
+        workon "$ENV_NAME" && export CD_VIRTUAL_ENV="$ENV_NAME"
+      fi
+    fi
+  fi
+}
+add-zsh-hook chpwd _python-workon-cwd

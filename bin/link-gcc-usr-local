@@ -1,0 +1,7 @@
+#!/bin/zsh
+
+for file in *
+do
+  echo "ln -s $PWD/$file /usr/local/bin/$file"
+  ln -s $PWD/$file /usr/local/bin/$file
+done
