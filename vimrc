@@ -70,6 +70,8 @@ Plug 'bkad/CamelCaseMotion'
 "Plug 'rust-lang/rust.vim'
 
 Plug 'tpope/vim-fugitive'
+" Depends on fugitive
+Plug 'idanarye/vim-merginal'
 
 "Plug 'vim-scripts/Conque-GDB'
 
@@ -155,10 +157,18 @@ nnoremap <C-n> <C-I>
 
 if !exists('set_syntax')
    syntax enable
-   set background=light
+
+   let iterm_profile = $ITERM_PROFILE
+
+   if iterm_profile == "Dark"
+     set background=dark
+   else
+     set background=light
+   endif
+
    let g:solarized_termtrans = 1
    "set guifont=Monaco:h12
-   set guifont=FiraMono\ Nerd\ Font\ Mono:h13
+   set guifont=FiraMono\ Nerd\ Font\ Mono:h14
    colorscheme solarized
 
    "set t_Co=256

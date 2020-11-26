@@ -22,6 +22,8 @@ tags
 compile_commands.json
 compile_flags.txt
 .clangd
+.cache/clangd
+.cache
 
 # python
 .python-version

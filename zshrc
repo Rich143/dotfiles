@@ -5,11 +5,41 @@ export PATH=~/Tools/gcc-arm-none-eabi-7-2017-q4-major/bin:$PATH
 export PATH=$PATH:/Applications/SEGGER/JLink
 export PATH=$PATH:~/Apple-Work-Documents/C99/Tools
 
+# Make brew bin appear first in path
+export PATH=/opt/brew/bin:$PATH
+
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/richardmatthews/.oh-my-zsh"
 
+if [[ "$(uname -s)" == "Darwin" ]]; then
+    sith() {
+        val=$(defaults read -g AppleInterfaceStyle 2>/dev/null)
+        if [[ $val == "Dark" ]]; then
+            i
+        else
+            SOLARIZED_THEME="light"
+        fi
+    }
 
-SOLARIZED_THEME="light"
+    i() {
+        if [[ $ITERM_PROFILE == "Default" ]]; then
+            echo -ne "\033]50;SetProfile=Dark\a"
+            export ITERM_PROFILE="Dark"
+            SOLARIZED_THEME="dark"
+        else
+            echo -ne "\033]50;SetProfile=Default\a"
+            export ITERM_PROFILE="Default"
+            SOLARIZED_THEME="light"
+        fi
+    }
+
+    sith
+else
+  SOLARIZED_THEME="light"
+fi
+
+
+
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
@@ -239,3 +269,6 @@ function _python-workon-cwd() {
   fi
 }
 add-zsh-hook chpwd _python-workon-cwd
+
+#homebrew
+export PATH="/opt/brew/sbin:$PATH"
