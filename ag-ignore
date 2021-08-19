@@ -1,3 +1,6 @@
 *.o
 *.lst
 *.su
+
+# Docs
+Docs/**

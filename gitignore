@@ -24,6 +24,8 @@ compile_flags.txt
 .clangd
 .cache/clangd
 .cache
+build_log.txt
 
 # python
 .python-version
+.venv

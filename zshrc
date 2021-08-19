@@ -200,7 +200,7 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#2aa198,bg=#002b36,underline"
 
 zinit light "skywind3000/z.lua"
 
-zinit light zdharma/fast-syntax-highlighting
+#zinit light zdharma/fast-syntax-highlighting
 
 # FZF
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -226,49 +226,54 @@ eval "$(register-python-argcomplete pipx)"
 # auto enable python virtual environments
 export WORKON_HOME=$HOME/.virtualenvs
 source $HOME/.pyenv/versions/3.8.3/bin/virtualenvwrapper.sh
-function _python-workon-cwd() {
-  # Check if this is a Git repo
-  local GIT_REPO_ROOT=""
-  local GIT_TOPLEVEL="$(git rev-parse --show-toplevel 2> /dev/null)"
-  if [[ $? == 0 ]]; then
-    GIT_REPO_ROOT="$GIT_TOPLEVEL"
-  fi
-  # Get absolute path, resolving symlinks
-  local PROJECT_ROOT="${PWD:A}"
-  while [[ "$PROJECT_ROOT" != "/" && ! -e "$PROJECT_ROOT/.venv" \
-            && ! -d "$PROJECT_ROOT/.git"  && "$PROJECT_ROOT" != "$GIT_REPO_ROOT" ]]; do
-    PROJECT_ROOT="${PROJECT_ROOT:h}"
-  done
-  if [[ "$PROJECT_ROOT" == "/" ]]; then
-    PROJECT_ROOT="."
-  fi
-  # Check for virtualenv name override
-  local ENV_NAME=""
-  if [[ -f "$PROJECT_ROOT/.venv" ]]; then
-    ENV_NAME="$(cat "$PROJECT_ROOT/.venv")"
-  elif [[ -f "$PROJECT_ROOT/.venv/bin/activate" ]];then
-    ENV_NAME="$PROJECT_ROOT/.venv"
-  elif [[ "$PROJECT_ROOT" != "." ]]; then
-    ENV_NAME="${PROJECT_ROOT:t}"
-  fi
-  if [[ -n $CD_VIRTUAL_ENV && "$ENV_NAME" != "$CD_VIRTUAL_ENV" ]]; then
-    # We've just left the repo, deactivate the environment
-    # Note: this only happens if the virtualenv was activated automatically
-    deactivate && unset CD_VIRTUAL_ENV
-  fi
-  if [[ "$ENV_NAME" != "" ]]; then
-    # Activate the environment only if it is not already active
-    if [[ "$VIRTUAL_ENV" != "$ENV_NAME" ]]; then
-      #echo "Activating virtual env"
-      if [[ -e "$ENV_NAME/bin/activate" ]]; then
-        source $ENV_NAME/bin/activate && export CD_VIRTUAL_ENV="$ENV_NAME"
-      elif [[ -e "$WORKON_HOME/$ENV_NAME/bin/activate" ]]; then
-        workon "$ENV_NAME" && export CD_VIRTUAL_ENV="$ENV_NAME"
-      fi
-    fi
-  fi
-}
-add-zsh-hook chpwd _python-workon-cwd
+#function _python-workon-cwd() {
+  ## Check if this is a Git repo
+  #local GIT_REPO_ROOT=""
+  #local GIT_TOPLEVEL="$(git rev-parse --show-toplevel 2> /dev/null)"
+  #if [[ $? == 0 ]]; then
+    #GIT_REPO_ROOT="$GIT_TOPLEVEL"
+  #fi
+  ## Get absolute path, resolving symlinks
+  #local PROJECT_ROOT="${PWD:A}"
+  #while [[ "$PROJECT_ROOT" != "/" && ! -e "$PROJECT_ROOT/.venv" \
+            #&& ! -d "$PROJECT_ROOT/.git"  && "$PROJECT_ROOT" != "$GIT_REPO_ROOT" ]]; do
+    #PROJECT_ROOT="${PROJECT_ROOT:h}"
+  #done
+  #if [[ "$PROJECT_ROOT" == "/" ]]; then
+    #PROJECT_ROOT="."
+  #fi
+  ## Check for virtualenv name override
+  #local ENV_NAME=""
+  #if [[ -f "$PROJECT_ROOT/.venv" ]]; then
+    #ENV_NAME="$(cat "$PROJECT_ROOT/.venv")"
+  #elif [[ -f "$PROJECT_ROOT/.venv/bin/activate" ]];then
+    #ENV_NAME="$PROJECT_ROOT/.venv"
+  #elif [[ "$PROJECT_ROOT" != "." ]]; then
+    #ENV_NAME="${PROJECT_ROOT:t}"
+  #fi
+  #if [[ -n $CD_VIRTUAL_ENV && "$ENV_NAME" != "$CD_VIRTUAL_ENV" ]]; then
+    ## We've just left the repo, deactivate the environment
+    ## Note: this only happens if the virtualenv was activated automatically
+    #deactivate && unset CD_VIRTUAL_ENV
+  #fi
+  #if [[ "$ENV_NAME" != "" ]]; then
+    ## Activate the environment only if it is not already active
+    #if [[ "$VIRTUAL_ENV" != "$ENV_NAME" ]]; then
+      ##echo "Activating virtual env"
+      #if [[ -e "$ENV_NAME/bin/activate" ]]; then
+        #source $ENV_NAME/bin/activate && export CD_VIRTUAL_ENV="$ENV_NAME"
+      #elif [[ -e "$WORKON_HOME/$ENV_NAME/bin/activate" ]]; then
+        #workon "$ENV_NAME" && export CD_VIRTUAL_ENV="$ENV_NAME"
+      #fi
+    #fi
+  #fi
+#}
+#add-zsh-hook chpwd _python-workon-cwd
+source ~/dotfiles/zsh/virtualenv-auto-activate.sh
 
 #homebrew
 export PATH="/opt/brew/sbin:$PATH"
+[[ :$PATH: == *:$HOME/bin:* ]] || PATH=$HOME/bin:$PATH
+
+# Don't share history between shells
+unsetopt share_history

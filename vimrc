@@ -14,6 +14,8 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'junegunn/vim-plug'
 
+
+Plug 'overcache/NeoSolarized'
 Plug 'altercation/vim-colors-solarized'
 
 "Plug 'tmhedberg/SimpylFold'
@@ -34,7 +36,7 @@ Plug 'majutsushi/tagbar'
 " LSP support
 "Plug 'liuchengxu/vista.vim'
 
-Plug 'vim-scripts/TaskList.vim'
+"Plug 'vim-scripts/TaskList.vim'
 
 "Plug 'unblevable/quick-scope'
 
@@ -134,6 +136,8 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': 
 
 Plug 'martinda/Jenkinsfile-vim-syntax'
 
+Plug 'rhysd/vim-clang-format'
+
 " All of your Plugins must be added before the following line
 call plug#end()            " required
 
@@ -155,30 +159,96 @@ set number
 
 nnoremap <C-n> <C-I>
 
+function! LightlineReload()
+  call lightline#init()
+  call lightline#colorscheme()
+  call lightline#update()
+endfunction
+
+func! SetSyntax()
+  syntax enable
+
+  if has("gui_running")
+    if has("gui_macvim")
+      colorscheme NeoSolarized
+    else
+      colorscheme solarized
+    endif
+  else
+    colorscheme solarized
+  endif
+
+  " LSP CXX Highlight
+  hi LspCxxHlGroupMemberVariable ctermfg=Magenta guifg=#d33682
+
+
+  if (v:os_appearance == 1)
+    set background=dark
+  else
+    set background=light
+  endif
+
+  "let iterm_profile = $ITERM_PROFILE
+
+  "if iterm_profile == "Dark"
+  "set background=dark
+  "else
+  "set background=light
+  "endif
+
+  set guifont=FiraMono\ Nerd\ Font\ Mono:h14
+
+  if has("gui_macvim")
+    " I make vertSplitBar a transparent background color. If you like the origin
+    " solarized vertSplitBar style more, set this value to 0.
+    let g:neosolarized_vertSplitBgTrans = 0
+
+    " Default value is "normal", Setting this option to "high" or "low" does use the
+    " same Solarized palette but simply shifts some values up or down in order to
+    " expand or compress the tonal range displayed.
+    let g:neosolarized_contrast = "normal"
+
+    " Special characters such as trailing whitespace, tabs, newlines, when displayed
+    " using ":set list" can be set to one of three levels depending on your needs.
+    " Default value is "normal". Provide "high" and "low" options.
+    let g:neosolarized_visibility = "normal"
+
+    " If you wish to enable/disable NeoSolarized from displaying bold, underlined
+    " or italicized" typefaces, simply assign 1 or 0 to the appropriate variable.
+    " Default values:
+    let g:neosolarized_bold = 1
+    let g:neosolarized_underline = 1
+    let g:neosolarized_italic = 1
+
+    " Used to enable/disable "bold as bright" in Neovim terminal. If colors of bold
+    " text output by commands like `ls` aren't what you expect, you might want to
+    " try disabling this option. Default value:
+    let g:neosolarized_termBoldAsBright = 1
+  else
+    let g:solarized_termtrans = 1
+    let g:solarized_contrast="high"
+    let g:solarized_visibility="high"
+    let g:solarized_menu=1
+  endif
+endfunc
+
+func! ChangeBackground()
+  if (v:os_appearance == 1)
+    set background=dark
+    let g:lightline.colorscheme = 'wombat'
+  else
+    set background=light
+    let g:lightline.colorscheme = 'solarized'
+  endif
+  redraw!
+  call LightlineReload()
+endfunc
+
+au OSAppearanceChanged * call ChangeBackground()
+
 if !exists('set_syntax')
-   syntax enable
-
-   let iterm_profile = $ITERM_PROFILE
-
-   if iterm_profile == "Dark"
-     set background=dark
-   else
-     set background=light
-   endif
-
-   let g:solarized_termtrans = 1
-   "set guifont=Monaco:h12
-   set guifont=FiraMono\ Nerd\ Font\ Mono:h14
-   colorscheme solarized
-
-   "set t_Co=256
-   "let g:solarized_termcolors=256
-   "let g:solarized_termcolors=16
-   let g:solarized_contrast="high"
-   let g:solarized_visibility="high"
-   let g:solarized_menu=1
-
-   let set_syntax = 1
+  call SetSyntax()
+  let set_syntax = 1
 endif
 
 set hlsearch
@@ -429,7 +499,7 @@ let g:tagbar_sort = 0
 
 
 " TaskList (TODO)
-nnoremap <leader>d <Plug>TaskList
+"nnoremap <leader>d <Plug>TaskList
 
 function! s:DiffWithSaved()
    let filetype=&ft
@@ -537,7 +607,8 @@ let g:fzf_colors = {}
   "\ 'marker':  ['fg', 'Keyword'],
   "\ 'spinner': ['fg', 'Label'],
   "\ 'header':  ['fg', 'Comment'] }
-nnoremap <leader>p :GFiles --cached --others --exclude-standard<cr>
+nnoremap <leader>p :Files<cr>
+nnoremap <leader>g :GFiles --cached --others --exclude-standard<cr>
 "command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
 imap <c-x><c-f> <plug>(fzf-complete-file-ag)
 
@@ -582,64 +653,64 @@ set wildmode=longest:full,full
 
 " swtich to header file
 "nnoremap <leader>a :find %:t:r.
-nnoremap <leader>j :edit <C-R>=GetHeaderSourceFile()<CR><CR>
+nnoremap <leader>j :CocCommand clangd.switchSourceHeader<CR>
 
-function! GetHeaderSourceFile()
-    let cur_file = expand('%:t:r')
-    let cur_file_extension = expand('%:e')
-    let cur_dir = getcwd()
-python3 << endpython
-import vim
-import subprocess
+"function! GetHeaderSourceFile()
+    "let cur_file = expand('%:t:r')
+    "let cur_file_extension = expand('%:e')
+    "let cur_dir = getcwd()
+"python3 << endpython
+"import vim
+"import subprocess
 
-header_extensions = ['hpp', 'h']
-source_extensions = ['c', 'cpp']
+"header_extensions = ['hpp', 'h']
+"source_extensions = ['c', 'cpp']
 
-curFileExtension = vim.eval('cur_file_extension')
+"curFileExtension = vim.eval('cur_file_extension')
 
-if curFileExtension in source_extensions:
-    extensions = header_extensions
-else:
-    extensions = source_extensions
+"if curFileExtension in source_extensions:
+    "extensions = header_extensions
+"else:
+    "extensions = source_extensions
 
-cwd = vim.eval('cur_dir')
-file = vim.eval('cur_file')
+"cwd = vim.eval('cur_dir')
+"file = vim.eval('cur_file')
 
-found = False
+"found = False
 
-for extension in extensions:
-    command = ['find', '{cwd}'.format(cwd=cwd),
-    '-name',
-    '{file}.{extension}'.format( file=file, extension=extension)
-    ]
-    print(command)
-    try:
-        output = subprocess.check_output(command, shell=False, universal_newlines=True)
-        foundFile = output.partition('\n')[0]
-        foundFile = foundFile.rstrip()
-    except subprocess.CalledProcessError as e:
-        print(e.output)
-        continue
-    if not foundFile:
-        print("Found no file")
-        continue
-    else:
-        print("Found {}".format(foundFile))
-        found = True
-        vim.command('let header_source_file = "{}"'.format(foundFile))
-        break
+"for extension in extensions:
+    "command = ['find', '{cwd}'.format(cwd=cwd),
+    "'-name',
+    "'{file}.{extension}'.format( file=file, extension=extension)
+    "]
+    "print(command)
+    "try:
+        "output = subprocess.check_output(command, shell=False, universal_newlines=True)
+        "foundFile = output.partition('\n')[0]
+        "foundFile = foundFile.rstrip()
+    "except subprocess.CalledProcessError as e:
+        "print(e.output)
+        "continue
+    "if not foundFile:
+        "print("Found no file")
+        "continue
+    "else:
+        "print("Found {}".format(foundFile))
+        "found = True
+        "vim.command('let header_source_file = "{}"'.format(foundFile))
+        "break
 
-if not found:
-    vim.command('let header_source_file = ""')
-endpython
+"if not found:
+    "vim.command('let header_source_file = ""')
+"endpython
 
-    if header_source_file == ""
-        echoerr "Couldn't find file"
-        return expand('%')
-    else
-        return header_source_file
-    endif
-endfunction
+    "if header_source_file == ""
+        "echoerr "Couldn't find file"
+        "return expand('%')
+    "else
+        "return header_source_file
+    "endif
+"endfunction
 
 
 nnoremap <leader>zo :new<CR>:setlocal buftype=nofile<CR>:read !svn status<CR>
@@ -832,6 +903,8 @@ nmap <leader>rn <Plug>(coc-rename)
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
 
+nnoremap <leader>d :CocDiagnostics<CR>
+
 augroup MyCocAutoCmdGroup
   autocmd!
   " Highlight the symbol and its references when holding the cursor.
@@ -854,13 +927,12 @@ nmap <leader>qf  <Plug>(coc-fix-current)
 
 set undodir=~/.vim/undodir
 
-
-" LSP CXX Highlight
-hi LspCxxHlGroupMemberVariable ctermfg=Magenta guifg=#d33682
-
 set spell
 
 set belloff=all
+
+" LSP CXX Highlight
+hi LspCxxHlGroupMemberVariable ctermfg=Magenta guifg=#d33682
 
 set makeprg=/Users/richardmatthews/bin/make-strip-xcode-warning
 " Notes
