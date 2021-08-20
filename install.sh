@@ -55,7 +55,8 @@ install_homebrew_packages() {
         echo "universal-ctags installed already"
     else
         brew tap universal-ctags/universal-ctags
-        brew install --with-jansson --HEAD universal-ctags/universal-ctags/universal-ctags
+        #brew install --with-jansson --HEAD universal-ctags/universal-ctags/universal-ctags
+        brew install --HEAD universal-ctags/universal-ctags/universal-ctags
     fi
 
     if brew ls --versions macvim > /dev/null; then
@@ -73,7 +74,7 @@ install_homebrew_packages() {
     if [ -d ~/.hammerspoon ]; then
         echo "hammerspoon installed already"
     else
-        brew cask install hammerspoon
+        brew install hammerspoon
     fi
 
     if brew ls --versions pyenv > /dev/null; then
@@ -82,7 +83,7 @@ install_homebrew_packages() {
         brew install pyenv
     fi
 
-    if brew ls --versions pyenv > /dev/null; then
+    if brew ls --versions font-fira-mono-nerd-font > /dev/null; then
         echo "fira-mono nerf font installed already"
     else
         brew tap homebrew/cask-fonts
@@ -107,6 +108,11 @@ install_homebrew_packages() {
     else
         brew install doxygen
     fi
+    if brew ls --version node > /dev/null; then
+        echo "node.js installed already"
+    else
+        brew install node
+    fi
 }
 
 install_zinit() {
@@ -130,7 +136,6 @@ main() {
     install_homebrew
     install_homebrew_packages
     install_zinit
-    install_node_js
 
     for file in $DOTS; do
         dst="$HOME/.$file"
