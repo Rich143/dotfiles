@@ -48,16 +48,6 @@ ZSH_THEME="agnoster"
 
 ZSH_DISABLE_COMPFIX=true
 
-#
-# Python
-#
-if command -v pyenv 1>/dev/null 2>&1; then
-  eval "$(pyenv init -)"
-fi
-
-# poetry
-export PATH="$HOME/.poetry/bin:$PATH"
-
 [[ -d /opt/brew/share/zsh/site-functions/ ]] && fpath+=(/opt/brew/share/zsh/site-functions/)
 
 # Set list of themes to pick from when loading at random
@@ -118,7 +108,7 @@ export PATH="$HOME/.poetry/bin:$PATH"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git poetry)
+plugins=(git)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -202,9 +192,13 @@ zinit light "skywind3000/z.lua"
 
 #zinit light zdharma/fast-syntax-highlighting
 
+
 # FZF
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+#[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_COMMAND='ag --path-to-ignore ~/.ag-ignore -g ""'
+export FZF_BASE=~/.vim/plugged/fzf/bin
+export PATH=$FZF_BASE:$PATH
+zinit light 'unixorn/fzf-zsh-plugin'
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
@@ -223,9 +217,16 @@ autoload -U bashcompinit
 bashcompinit
 eval "$(register-python-argcomplete pipx)"
 
+#
+# Python
+#
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init --path)"
+fi
+
 # auto enable python virtual environments
 export WORKON_HOME=$HOME/.virtualenvs
-source $HOME/.pyenv/versions/3.8.3/bin/virtualenvwrapper.sh
+source $HOME/.pyenv/versions/3.9.6/bin/virtualenvwrapper.sh
 #function _python-workon-cwd() {
   ## Check if this is a Git repo
   #local GIT_REPO_ROOT=""
@@ -277,3 +278,7 @@ export PATH="/opt/brew/sbin:$PATH"
 
 # Don't share history between shells
 unsetopt share_history
+
+
+# fzf git checkout
+[ -f ~/dotfiles/zsh/fzf-git-checkout.sh ] && source ~/dotfiles/zsh/fzf-git-checkout.sh
