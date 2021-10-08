@@ -6,7 +6,7 @@ export PATH=$PATH:/Applications/SEGGER/JLink
 export PATH=$PATH:~/Apple-Work-Documents/C99/Tools
 
 # Make brew bin appear first in path
-export PATH=/opt/brew/bin:$PATH
+export PATH=/opt/homebrew/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/richardmatthews/.oh-my-zsh"
@@ -48,7 +48,7 @@ ZSH_THEME="agnoster"
 
 ZSH_DISABLE_COMPFIX=true
 
-[[ -d /opt/brew/share/zsh/site-functions/ ]] && fpath+=(/opt/brew/share/zsh/site-functions/)
+[[ -d /opt/homebrew/share/zsh/site-functions/ ]] && fpath+=(/opt/homebrew/share/zsh/site-functions/)
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -207,7 +207,7 @@ PATH=~/.xclink/bin:$PATH
 
 # Allow using vim to edit current command
 autoload edit-command-line; zle -N edit-command-line
-bindkey -M vicmd ' ' edit-command-line
+bindkey -M vicmd v edit-command-line
 
 # Created by `userpath` on 2020-07-14 15:12:48
 export PATH="$PATH:/Users/richardmatthews/.local/bin"
@@ -273,7 +273,7 @@ source $HOME/.pyenv/versions/3.9.6/bin/virtualenvwrapper.sh
 source ~/dotfiles/zsh/virtualenv-auto-activate.sh
 
 #homebrew
-export PATH="/opt/brew/sbin:$PATH"
+export PATH="/opt/homebrew/sbin:$PATH"
 [[ :$PATH: == *:$HOME/bin:* ]] || PATH=$HOME/bin:$PATH
 
 # Don't share history between shells
