@@ -5,8 +5,10 @@ export PATH=~/Tools/gcc-arm-none-eabi-7-2017-q4-major/bin:$PATH
 export PATH=$PATH:/Applications/SEGGER/JLink
 export PATH=$PATH:~/Apple-Work-Documents/C99/Tools
 
+HOMEBREW_PATH=/opt/brew
+
 # Make brew bin appear first in path
-export PATH=/opt/homebrew/bin:$PATH
+export PATH=$HOMEBREW_PATH/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/richardmatthews/.oh-my-zsh"
@@ -48,7 +50,7 @@ ZSH_THEME="agnoster"
 
 ZSH_DISABLE_COMPFIX=true
 
-[[ -d /opt/homebrew/share/zsh/site-functions/ ]] && fpath+=(/opt/homebrew/share/zsh/site-functions/)
+[[ -d $HOMEBREW_PATH/share/zsh/site-functions/ ]] && fpath+=($HOMEBREW_PATH/share/zsh/site-functions/)
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -226,7 +228,8 @@ fi
 
 # auto enable python virtual environments
 export WORKON_HOME=$HOME/.virtualenvs
-source $HOME/.pyenv/versions/3.9.6/bin/virtualenvwrapper.sh
+PYTHON_BIN_DIR=$(python3 -c 'import sysconfig; print(sysconfig.get_paths()["scripts"])')
+source $PYTHON_BIN_DIR/virtualenvwrapper.sh
 #function _python-workon-cwd() {
   ## Check if this is a Git repo
   #local GIT_REPO_ROOT=""
@@ -273,7 +276,7 @@ source $HOME/.pyenv/versions/3.9.6/bin/virtualenvwrapper.sh
 source ~/dotfiles/zsh/virtualenv-auto-activate.sh
 
 #homebrew
-export PATH="/opt/homebrew/sbin:$PATH"
+export PATH="$HOMEBREW_PATH/sbin:$PATH"
 [[ :$PATH: == *:$HOME/bin:* ]] || PATH=$HOME/bin:$PATH
 
 # Don't share history between shells

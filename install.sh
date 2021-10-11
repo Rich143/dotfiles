@@ -132,10 +132,18 @@ install_node_js() {
     fi
 }
 
+install_python_packages() {
+    pyenv install 3.9.0
+    pyenv global 3.9.0
+    python -m pip install virtualenv
+    python -m pip install virtualenvwrapper
+}
+
 main() {
     install_homebrew
     install_homebrew_packages
     install_zinit
+    install_python_packages
 
     for file in $DOTS; do
         dst="$HOME/.$file"
