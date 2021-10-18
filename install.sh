@@ -42,7 +42,7 @@ install_homebrew() {
     if command -v brew >/dev/null 2>&1; then
         echo "Homebrew already installed"
     else
-        /bin/zsh -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
     fi
 }
 
@@ -114,6 +114,11 @@ install_homebrew_packages() {
         echo "node.js installed already"
     else
         brew install node
+    fi
+    if brew ls --version fzf > /dev/null; then
+        echo "fzf installed already"
+    else
+        brew install fzf
     fi
 }
 
