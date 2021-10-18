@@ -46,6 +46,10 @@ install_homebrew() {
     fi
 }
 
+install_oh_my_zsh() {
+    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+}
+
 install_homebrew_packages() {
     if brew ls --versions the_silver_searcher > /dev/null; then
         echo "the_silver_searcher installed already"
@@ -140,8 +144,8 @@ install_node_js() {
 }
 
 install_python_packages() {
-    pyenv install 3.9.0
-    pyenv global 3.9.0
+    pyenv install 3.10.0
+    pyenv global 3.10.0
     python -m pip install virtualenv
     python -m pip install virtualenvwrapper
 }
@@ -149,6 +153,7 @@ install_python_packages() {
 main() {
     install_homebrew
     install_homebrew_packages
+    install_oh_my_zsh
     install_zinit
     install_python_packages
 
