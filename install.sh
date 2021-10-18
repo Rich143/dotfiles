@@ -1,5 +1,7 @@
 DOTS="vim vimrc tmux.conf zshrc gitconfig ag-ignore ctags gitignore hammerspoon"
 NON_DOTS="bin"
+PREFERENCES="com.googlecode.iterm2.plist"
+PREFERENCES_DEST_DIR=~/Library/Preferences
 
 check_exists() {
     file=$1
@@ -159,6 +161,18 @@ main() {
 
     for file in $NON_DOTS; do
         dst="$HOME/$file"
+        src=$PWD/$file
+
+        echo "checking: $dst"
+        check_exists $dst
+        local res=$?
+        if [ $res -eq 0 ]; then
+            link_file $src $dst
+        fi
+    done
+
+    for file in $PREFERENCES; do
+        dst="$PREFERENCES_DEST_DIR/$file"
         src=$PWD/$file
 
         echo "checking: $dst"
