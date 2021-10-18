@@ -182,8 +182,12 @@ func! SetSyntax()
   hi LspCxxHlGroupMemberVariable ctermfg=Magenta guifg=#d33682
 
 
-  if (v:os_appearance == 1)
-    set background=dark
+  if has("gui_running")
+    if (v:os_appearance == 1)
+      set background=dark
+    else
+      set background=light
+    endif
   else
     set background=light
   endif
@@ -244,7 +248,9 @@ func! ChangeBackground()
   call LightlineReload()
 endfunc
 
-au OSAppearanceChanged * call ChangeBackground()
+if has("gui_running")
+  au OSAppearanceChanged * call ChangeBackground()
+endif
 
 if !exists('set_syntax')
   call SetSyntax()
