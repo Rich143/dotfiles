@@ -123,6 +123,12 @@ install_homebrew_packages() {
         echo "fzf installed already"
     else
         brew install fzf
+        $(brew --prefix)/opt/fzf/install
+    fi
+    if brew ls --version tree > /dev/null; then
+        echo "tree installed already"
+    else
+        brew install tree
     fi
 }
 
