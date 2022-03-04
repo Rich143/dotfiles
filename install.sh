@@ -130,12 +130,17 @@ install_homebrew_packages() {
     else
         brew install tree
     fi
+    if brew ls --version pyenv-virtualenv > /dev/null; then
+        echo "pyenv-virtualenv installed already"
+    else
+        brew install pyenv-virtualenv
+    fi
 }
 
 install_zinit() {
     ZINIT_DIRECTORY=~/.zinit
     if [ ! -d "$ZINIT_DIRECTORY" ]; then
-        sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh)"
+        sh -c "$(curl -fsSL https://git.io/zinit-install)"
     fi
 }
 
@@ -157,11 +162,11 @@ install_python_packages() {
 }
 
 main() {
-    install_homebrew
-    install_homebrew_packages
-    install_oh_my_zsh
-    install_zinit
-    install_python_packages
+   install_homebrew
+   install_homebrew_packages
+   install_oh_my_zsh
+   install_zinit
+   install_python_packages
 
     for file in $DOTS; do
         dst="$HOME/.$file"

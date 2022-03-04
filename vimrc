@@ -10,10 +10,15 @@ if empty(glob('~/.vim/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
+let g:vimspector_enable_mappings = 'HUMAN'
+
 call plug#begin('~/.vim/plugged')
 
 Plug 'junegunn/vim-plug'
 
+Plug 'puremourning/vimspector'
+
+Plug 'seeamkhan/robotframework-vim'
 
 Plug 'overcache/NeoSolarized'
 Plug 'altercation/vim-colors-solarized'
