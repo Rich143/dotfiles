@@ -1,1 +1,1 @@
-make $@ 2>&1 | grep -v PreferencePane
+make $@ 2>&1 | grep -v PreferencePane | grep -v "One of the two will be used. Which one is undefined."

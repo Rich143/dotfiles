@@ -119,7 +119,7 @@ Plug 'mrtazz/DoxygenToolkit.vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " C/C++ LSP syntax highlighting
-Plug 'jackguo380/vim-lsp-cxx-highlight'
+"Plug 'jackguo380/vim-lsp-cxx-highlight'
 
 " Python formatting
 Plug 'Vimjas/vim-python-pep8-indent'
@@ -142,6 +142,8 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': 
 Plug 'martinda/Jenkinsfile-vim-syntax'
 
 Plug 'rhysd/vim-clang-format'
+
+Plug 'sk1418/HowMuch'
 
 " All of your Plugins must be added before the following line
 call plug#end()            " required
@@ -184,7 +186,7 @@ func! SetSyntax()
   endif
 
   " LSP CXX Highlight
-  hi LspCxxHlGroupMemberVariable ctermfg=Magenta guifg=#d33682
+  "hi LspCxxHlGroupMemberVariable ctermfg=Magenta guifg=#d33682
 
 
   if has("gui_running")
@@ -406,7 +408,7 @@ let g:lightline = {
       \            ] },
       \ 'component_function': {
       \   'tags'        : 'gutentags#statusline',
-      \   'gitbranch'   : 'fugitive#head',
+      \   'gitbranch'   : 'FugitiveHead',
       \   'filename'    : 'LightLineFilename',
       \   'fileformat'  : 'LightlineFileformat',
       \   'filetype'    : 'LightlineFiletype',
@@ -828,7 +830,7 @@ set clipboard=unnamed
 ""
 " Coc.nvim
 ""
-let g:coc_global_extensions = [ 'coc-json', 'coc-python', 'coc-clangd' ]
+let g:coc_global_extensions = [ 'coc-json', 'coc-python', 'coc-clangd', 'coc-snippets' ]
 
 " TextEdit might fail if hidden is not set.
 set hidden
@@ -943,9 +945,17 @@ set spell
 set belloff=all
 
 " LSP CXX Highlight
-hi LspCxxHlGroupMemberVariable ctermfg=Magenta guifg=#d33682
+"hi LspCxxHlGroupMemberVariable ctermfg=Magenta guifg=#d33682
+"let g:lsp_cxx_hl_use_text_props = 1
 
 set makeprg=/Users/richardmatthews/bin/make-strip-xcode-warning
+
+" clang formtat
+let g:clang_format#detect_style_file = 1
+let g:clang_format#auto_format = 1
+let g:clang_format#auto_format_git_diff = 1
+let g:clang_format#auto_format_on_insert_leave = 0
+
 " Notes
 " gf - jump to file under cursor and <C-^> or <C-6> to return to previous
 " buffer
