@@ -1,6 +1,6 @@
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH=/Applications/ARM/bin:$PATH
+export PATH=/Applications/ArmGNUToolchain/Latest/arm-none-eabi/bin:$PATH
 #export PATH=~/Tools/gcc-arm-none-eabi-7-2017-q4-major/bin:$PATH
 export PATH=$PATH:/Applications/SEGGER/JLink
 export PATH=$PATH:~/Apple-Work-Documents/C99/Tools
@@ -10,6 +10,11 @@ HOMEBREW_PATH=/opt/homebrew
 
 # Make brew bin appear first in path
 export PATH=$HOMEBREW_PATH/bin:$PATH
+
+#homebrew
+export PATH="$HOMEBREW_PATH/sbin:$PATH"
+[[ :$PATH: == *:$HOME/bin:* ]] || PATH=$HOME/bin:$PATH
+
 
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/richardmatthews/.oh-my-zsh"
@@ -154,6 +159,10 @@ prompt_context() {
   fi
 }
 
+prompt_dir() {
+  prompt_segment blue $CURRENT_FG '%3~'
+}
+
 ### Added by Zinit's installer
 if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
     print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
@@ -283,10 +292,6 @@ fi
 #add-zsh-hook chpwd _python-workon-cwd
 source ~/dotfiles/zsh/virtualenv-auto-activate.sh
 
-#homebrew
-export PATH="$HOMEBREW_PATH/sbin:$PATH"
-[[ :$PATH: == *:$HOME/bin:* ]] || PATH=$HOME/bin:$PATH
-
 # Don't share history between shells
 unsetopt share_history
 
@@ -298,16 +303,34 @@ unsetopt share_history
 alias renode='mono /Applications/Renode.app/Contents/MacOS/bin/Renode.exe'
 alias renode-test='/Applications/Renode.app/Contents/MacOS/tests/renode-test'
 
+## >>> conda initialize (Old pre 2025) >>>
+## !! Contents within this block are managed by 'conda init' !!
+#__conda_setup="$('/opt/homebrew/Caskroom/miniforge/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+#if [ $? -eq 0 ]; then
+    #eval "$__conda_setup"
+#else
+    #if [ -f "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh" ]; then
+        #. "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh"
+    #else
+        #export PATH="/opt/homebrew/Caskroom/miniforge/base/bin:$PATH"
+    #fi
+#fi
+#unset __conda_setup
+## <<< conda initialize <<<
+
+
+export STM32CubeMX_PATH=/Applications/STMicroelectronics/STM32CubeMX.app/Contents/Resources
+
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/opt/homebrew/Caskroom/miniforge/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+__conda_setup="$('/Users/richardmatthews/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh" ]; then
-        . "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh"
+    if [ -f "/Users/richardmatthews/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/Users/richardmatthews/miniconda3/etc/profile.d/conda.sh"
     else
-        export PATH="/opt/homebrew/Caskroom/miniforge/base/bin:$PATH"
+        export PATH="/Users/richardmatthews/miniconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup

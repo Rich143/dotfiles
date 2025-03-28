@@ -143,6 +143,9 @@ Plug 'martinda/Jenkinsfile-vim-syntax'
 
 Plug 'rhysd/vim-clang-format'
 
+" Codeium AI Assistant
+Plug 'Exafunction/codeium.vim', { 'branch': 'main' }
+
 " All of your Plugins must be added before the following line
 call plug#end()            " required
 
@@ -205,7 +208,7 @@ func! SetSyntax()
   "set background=light
   "endif
 
-  set guifont=FiraMono\ Nerd\ Font\ Mono:h14
+  set guifont=FiraMono\ Nerd\ Font\ Mono:h16
 
   if has("gui_macvim")
     " I make vertSplitBar a transparent background color. If you like the origin
@@ -827,8 +830,10 @@ set clipboard=unnamed
 
 ""
 " Coc.nvim
+"
+" NB: for rust, may need to run this command for it to work: `rustup component add rust-src`
 ""
-let g:coc_global_extensions = [ 'coc-json', 'coc-python', 'coc-clangd' ]
+let g:coc_global_extensions = [ 'coc-json', 'coc-python', 'coc-clangd', 'coc-rust-analyzer' ]
 
 " TextEdit might fail if hidden is not set.
 set hidden
@@ -856,27 +861,55 @@ else
   set signcolumn=yes
 endif
 
-" Use tab for trigger completion with characters ahead and navigate.
-" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+"" Use tab for trigger completion with characters ahead and navigate.
+"" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+"" other plugin before putting this into your config.
+"inoremap <silent><expr> <TAB>
+      "\ pumvisible() ? "\<C-n>" :
+      "\ <SID>check_back_space() ? "\<TAB>" :
+      "\ coc#refresh()
+"inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-function! s:check_back_space() abort
+"function! s:check_back_space() abort
+  "let col = col('.') - 1
+  "return !col || getline('.')[col - 1]  =~# '\s'
+"endfunction
+
+"" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
+"" position. Coc only does snippet and additional edit on confirm.
+"" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
+"if exists('*complete_info')
+  "inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+"else
+  "inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+"endif
+
+" Use tab for trigger completion with characters ahead and navigate
+" NOTE: There's always complete item selected by default, you may want to enable
+" no select by `"suggest.noselect": true` in your configuration file
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config
+inoremap <silent><expr> <TAB>
+      \ coc#pum#visible() ? coc#pum#next(1) :
+      \ CheckBackspace() ? "\<Tab>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+
+" Make <CR> to accept selected completion item or notify coc.nvim to format
+" <C-g>u breaks current undo, please make your own choice
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+function! CheckBackspace() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
-" position. Coc only does snippet and additional edit on confirm.
-" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
-if exists('*complete_info')
-  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+" Use <c-space> to trigger completion
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
 else
-  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+  inoremap <silent><expr> <c-@> coc#refresh()
 endif
 
 " Use `[g` and `]g` to navigate diagnostics
@@ -946,6 +979,19 @@ set belloff=all
 hi LspCxxHlGroupMemberVariable ctermfg=Magenta guifg=#d33682
 
 set makeprg=/Users/richardmatthews/bin/make-strip-xcode-warning
+
+"
+" Codeium
+"
+let g:codeium_disable_bindings = 1
+
+imap <script><silent><nowait><expr> <C-g> codeium#Accept()
+imap <script><silent><nowait><expr> <C-w> codeium#AcceptNextWord()
+imap <script><silent><nowait><expr> <C-l> codeium#AcceptNextLine()
+imap <C-;>   <Cmd>call codeium#CycleCompletions(1)<CR>
+imap <C-,>   <Cmd>call codeium#CycleCompletions(-1)<CR>
+imap <C-c>   <Cmd>call codeium#Clear()<CR>
+
 " Notes
 " gf - jump to file under cursor and <C-^> or <C-6> to return to previous
 " buffer

@@ -1,5 +1,8 @@
 {
    "coc.preferences.rootPatterns": [".git",".hg",".projections.json", "compile_commands.json", "compile_commands.txt"],
+   "coc.preferences.formatOnSaveFiletypes": ["rust"],
    "clangd.arguments": ["--background-index"],
-   "clangd.semanticHighlighting": true
+   "clangd.semanticHighlighting": true,
+   "rust-analyzer.inlayHints.parameterHints.enable": false,
+   "rust-analyzer.inlayHints.chainingHints.enable": false
 }
