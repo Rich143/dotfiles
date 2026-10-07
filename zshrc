@@ -13,11 +13,13 @@ export PATH=$HOMEBREW_PATH/bin:$PATH
 
 #homebrew
 export PATH="$HOMEBREW_PATH/sbin:$PATH"
+# llvm is keg-only; append so Apple's clang still wins but clangd is available
+export PATH="$PATH:$HOMEBREW_PATH/opt/llvm/bin"
 [[ :$PATH: == *:$HOME/bin:* ]] || PATH=$HOME/bin:$PATH
 
 
 # Path to your oh-my-zsh installation.
-export ZSH="/Users/richardmatthews/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 if [[ "$(uname -s)" == "Darwin" ]]; then
     sith() {
@@ -223,7 +225,7 @@ autoload edit-command-line; zle -N edit-command-line
 bindkey -M vicmd v edit-command-line
 
 # Created by `userpath` on 2020-07-14 15:12:48
-export PATH="$PATH:/Users/richardmatthews/.local/bin"
+export PATH="$PATH:$HOME/.local/bin"
 
 # pipx
 autoload -U bashcompinit
@@ -323,14 +325,14 @@ export STM32CubeMX_PATH=/Applications/STMicroelectronics/STM32CubeMX.app/Content
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/richardmatthews/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+__conda_setup="$("$HOME/miniconda3/bin/conda" 'shell.zsh' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/Users/richardmatthews/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/Users/richardmatthews/miniconda3/etc/profile.d/conda.sh"
+    if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "$HOME/miniconda3/etc/profile.d/conda.sh"
     else
-        export PATH="/Users/richardmatthews/miniconda3/bin:$PATH"
+        export PATH="$HOME/miniconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
@@ -342,6 +344,6 @@ export PATH="/opt/homebrew/lib/ruby/gems/3.4.0/bin:$PATH"
 
 
 # Added by Antigravity CLI installer
-export PATH="/Users/richardmatthews/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 export STM32_PRG_PATH=/Applications/STMicroelectronics/STM32Cube/STM32CubeProgrammer/STM32CubeProgrammer.app/Contents/Resources/bin

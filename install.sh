@@ -1,7 +1,8 @@
+# Make sure the Apple Silicon Homebrew (and tools like pyenv) are found
+[ -d /opt/homebrew/bin ] && export PATH="/opt/homebrew/bin:$PATH"
+
 DOTS="vim vimrc tmux.conf zshrc gitconfig ag-ignore ctags gitignore hammerspoon"
 NON_DOTS="bin"
-PREFERENCES="com.googlecode.iterm2.plist"
-PREFERENCES_DEST_DIR=~/Library/Preferences
 
 check_exists() {
     file=$1
@@ -47,7 +48,11 @@ install_homebrew() {
 }
 
 install_oh_my_zsh() {
-    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    if [ -d ~/.oh-my-zsh ]; then
+        echo "oh-my-zsh installed already"
+    else
+        sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc
+    fi
 }
 
 install_homebrew_packages() {
@@ -137,13 +142,6 @@ install_homebrew_packages() {
     fi
 }
 
-install_zinit() {
-    ZINIT_DIRECTORY=~/.zinit
-    if [ ! -d "$ZINIT_DIRECTORY" ]; then
-        sh -c "$(curl -fsSL https://git.io/zinit-install)"
-    fi
-}
-
 # Install node_js, required for coc.nvim
 install_node_js() {
     echo "Checking if node.js installed"
@@ -155,19 +153,38 @@ install_node_js() {
 }
 
 install_python_packages() {
-    pyenv install 3.10.0
-    pyenv global 3.10.0
-    python -m pip install virtualenv
-    python -m pip install virtualenvwrapper
+    pyenv install -s 3.12.8
+    pyenv global 3.12.8
+    pyenv exec python -m pip install virtualenv
+    pyenv exec python -m pip install virtualenvwrapper
     # compile_commands.json
     #python -m pip install compiledb
 }
 
+# macOS caches preferences and doesn't follow symlinks reliably, so point
+# iTerm at this folder instead of symlinking its plist. Quit iTerm first.
+setup_iterm_prefs() {
+    if pgrep -xu "$USER" iTerm2 > /dev/null; then
+        echo "iTerm is running; quit it (Cmd-Q) and re-run to set up its preferences"
+        return 1
+    fi
+    if [ -L ~/Library/Preferences/com.googlecode.iterm2.plist ]; then
+        rm ~/Library/Preferences/com.googlecode.iterm2.plist
+    fi
+    defaults write com.googlecode.iterm2 PrefsCustomFolder -string "$PWD"
+    defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
+    echo "iTerm will load its preferences from $PWD"
+}
+
 main() {
-   install_homebrew
-   install_homebrew_packages
+   # Homebrew may be owned by another (admin) account; only install packages if we can write to it
+   if command -v brew >/dev/null 2>&1 && [ ! -w "$(brew --prefix)" ]; then
+       echo "Homebrew at $(brew --prefix) is not writable by $USER, skipping package installs"
+   else
+       install_homebrew
+       install_homebrew_packages
+   fi
    install_oh_my_zsh
-   install_zinit
    install_python_packages
 
     for file in $DOTS; do
@@ -194,17 +211,7 @@ main() {
         fi
     done
 
-    for file in $PREFERENCES; do
-        dst="$PREFERENCES_DEST_DIR/$file"
-        src=$PWD/$file
-
-        echo "checking: $dst"
-        check_exists $dst
-        local res=$?
-        if [ $res -eq 0 ]; then
-            link_file $src $dst
-        fi
-    done
+    setup_iterm_prefs
 }
 
 main
