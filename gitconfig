@@ -11,7 +11,7 @@
     diffl = diff --ignore-space-at-eol -b -w --ignore-blank-lines
 [user]
 	name = Richard Matthews
-	email = richard_matthews@apple.com
+	email = richard.matthews3@icloud.com
 [core]
 	excludesfile = ~/.gitignore
 	autocrlf = input
