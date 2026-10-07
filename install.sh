@@ -43,7 +43,9 @@ install_homebrew() {
     if command -v brew >/dev/null 2>&1; then
         echo "Homebrew already installed"
     else
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        # The installer doesn't add brew to this shell's PATH
+        eval "$(/opt/homebrew/bin/brew shellenv)"
     fi
 }
 
@@ -65,9 +67,7 @@ install_homebrew_packages() {
     if brew ls --versions universal-ctags > /dev/null; then
         echo "universal-ctags installed already"
     else
-        brew tap universal-ctags/universal-ctags
-        #brew install --with-jansson --HEAD universal-ctags/universal-ctags/universal-ctags
-        brew install --HEAD universal-ctags/universal-ctags/universal-ctags
+        brew install universal-ctags
     fi
 
     if brew ls --versions macvim > /dev/null; then
@@ -97,7 +97,6 @@ install_homebrew_packages() {
     if brew ls --versions font-fira-mono-nerd-font > /dev/null; then
         echo "fira-mono nerf font installed already"
     else
-        brew tap homebrew/cask-fonts
         brew install font-fira-mono-nerd-font
     fi
 
