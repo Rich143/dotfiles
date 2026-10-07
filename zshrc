@@ -336,3 +336,12 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
+# Ruby
+export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
+export PATH="/opt/homebrew/lib/ruby/gems/3.4.0/bin:$PATH"
+
+
+# Added by Antigravity CLI installer
+export PATH="/Users/richardmatthews/.local/bin:$PATH"
+
+export STM32_PRG_PATH=/Applications/STMicroelectronics/STM32Cube/STM32CubeProgrammer/STM32CubeProgrammer.app/Contents/Resources/bin

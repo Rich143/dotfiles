@@ -4,5 +4,13 @@
    "clangd.arguments": ["--background-index"],
    "clangd.semanticHighlighting": true,
    "rust-analyzer.inlayHints.parameterHints.enable": false,
-   "rust-analyzer.inlayHints.chainingHints.enable": false
+   "rust-analyzer.inlayHints.chainingHints.enable": false,
+   "clangd.path": "~/.config/coc/extensions/coc-clangd-data/install/19.1.2/clangd_19.1.2/bin/clangd",
+
+   "python.analysis.typeCheckingMode": "basic",
+   "python.analysis.autoSearchPaths": true,
+   "python.analysis.useLibraryCodeForTypes": true,
+   "pyright.inlayHints.variableTypes": false,
+   "pyright.inlayHints.parameterTypes": true,
+   "pyright.inlayHints.functionReturnTypes": true
 }

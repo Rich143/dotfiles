@@ -400,7 +400,7 @@ let g:lightline = {
       \ 'colorscheme': 'solarized',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'cocstatus', 'gitbranch', 'readonly', 'filename', 'modified' ] ],
+      \             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ],
       \ 'right': [
       \            [ 'lineinfo' ],
       \            [ 'percent' ],
@@ -409,7 +409,6 @@ let g:lightline = {
       \            ] },
       \ 'component_function': {
       \   'tags'        : 'gutentags#statusline',
-      \   'gitbranch'   : 'fugitive#head',
       \   'filename'    : 'LightLineFilename',
       \   'fileformat'  : 'LightlineFileformat',
       \   'filetype'    : 'LightlineFiletype',
@@ -833,7 +832,7 @@ set clipboard=unnamed
 "
 " NB: for rust, may need to run this command for it to work: `rustup component add rust-src`
 ""
-let g:coc_global_extensions = [ 'coc-json', 'coc-python', 'coc-clangd', 'coc-rust-analyzer' ]
+let g:coc_global_extensions = [ 'coc-json', 'coc-clangd', 'coc-rust-analyzer', 'coc-pyright']
 
 " TextEdit might fail if hidden is not set.
 set hidden
@@ -991,6 +990,13 @@ imap <script><silent><nowait><expr> <C-l> codeium#AcceptNextLine()
 imap <C-;>   <Cmd>call codeium#CycleCompletions(1)<CR>
 imap <C-,>   <Cmd>call codeium#CycleCompletions(-1)<CR>
 imap <C-c>   <Cmd>call codeium#Clear()<CR>
+
+
+"
+" Disable modeline, to avoid c printf stataements getting treated like vim
+" commands
+"
+set nomodeline
 
 " Notes
 " gf - jump to file under cursor and <C-^> or <C-6> to return to previous

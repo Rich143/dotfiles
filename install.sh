@@ -159,6 +159,8 @@ install_python_packages() {
     pyenv global 3.10.0
     python -m pip install virtualenv
     python -m pip install virtualenvwrapper
+    # compile_commands.json
+    #python -m pip install compiledb
 }
 
 main() {
