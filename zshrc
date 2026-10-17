@@ -148,7 +148,14 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias gits="git status"
-alias make="$HOME/bin/make-strip-xcode-warning"
+
+# git push with one passphrase prompt: load the GitHub key for this push, then drop it
+gitpwpush() {
+  ssh-add -t 5m ~/.ssh/id_ed25519 || return
+  { git push "$@" } always { ssh-add -d ~/.ssh/id_ed25519 >/dev/null 2>&1 }
+}
+
+#alias make="$HOME/bin/make-strip-xcode-warning"
 
 # Hide hostname when not ssh'd
 prompt_context() {
