@@ -292,7 +292,7 @@ fi
   #fi
 #}
 #add-zsh-hook chpwd _python-workon-cwd
-source ~/dotfiles/zsh/virtualenv-auto-activate.sh
+#source ~/dotfiles/zsh/virtualenv-auto-activate.sh
 
 # Don't share history between shells
 unsetopt share_history

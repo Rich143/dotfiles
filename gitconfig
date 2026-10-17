@@ -32,3 +32,5 @@
 	cmd = git-nbmergetool merge \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"
 [mergetool]
 	prompt = false
+[url "git@github.com:"]
+	pushInsteadOf = https://github.com/
